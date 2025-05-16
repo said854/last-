@@ -6,26 +6,41 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 09:58:34 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/13 10:38:52 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/16 18:37:47 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-int	ft_strcmp(const char *str1, const char *str2)
+int	count_args(char **args)
 {
 	int	i;
 
 	i = 0;
-	if (!str1 || !str2)
-		return (EXIT_FAILURE);
-	while (str1[i] || str2[i])
-	{
-		if (str1[i] != str2[i])
-			return (str1[i] - str2[i]);
+	if (!args || !args[i])
+		return (EXIT_SUCCESS);
+	while (args[i])
 		i++;
+	return (i);
+}
+
+void	update_env(t_env **env, char *key, char *replace, t_list *alloc_list)
+{
+	t_env	*tmp;
+
+	if (!key || !replace)
+		return ;
+	tmp = *env;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, key) == 0)
+		{
+			tmp->value = ft_strdup(replace, alloc_list);
+			free (replace);
+			return ;
+		}
+		tmp = tmp->next;
 	}
-	return (EXIT_SUCCESS);
 }
 
 char	**get_paths(t_shell **shell, t_list *alloc_list)
@@ -60,4 +75,3 @@ char	*check_cmd(char **paths, char *cmd, t_list *alloc_list)
 	}
 	return (NULL);
 }
-

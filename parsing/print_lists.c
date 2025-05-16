@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 19:13:18 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/14 17:25:23 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/13 15:13:21 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void print_cmd_list(t_cmd *cmd_list)
     {
         printf("🔹 CMD %d:\n", cmd_num++);
 
-        // Args
         printf("  args    = ");
         if (cmd_list->args)
         {
@@ -44,7 +43,6 @@ void print_cmd_list(t_cmd *cmd_list)
             printf("(none)");
         printf("\n");
 
-        // Infiles
         printf("  infiles  = ");
         if (cmd_list->infiles)
         {
@@ -56,7 +54,7 @@ void print_cmd_list(t_cmd *cmd_list)
             printf("(none)");
         printf("\n");
 
-        // Outfiles
+        // Print outfiles and append flags
         printf("  outfiles = ");
         if (cmd_list->outfiles)
         {
@@ -68,34 +66,18 @@ void print_cmd_list(t_cmd *cmd_list)
             printf("(none)");
         printf("\n");
 
-        // Append flags
         printf("  append flags = ");
         int *flags = cmd_list->append_flags;
         for (int i = 0; flags && flags[i] != -1; i++)
             printf("%d ", flags[i]);
+
+        // else
+        //     printf("(none)");
         printf("\n");
 
-        // Pipe flag
+        // Other fields
         printf("  pipe    = %s\n", cmd_list->has_pipe ? "true" : "false");
-
-        // Heredoc list (if you stored them in heredocs array)
-        if (cmd_list->heredoc_count > 0)
-        {
-            printf("  heredocs =\n");
-            for (i = 0; i < cmd_list->heredoc_count; i++)
-            {
-                printf("    [%d] delim=\"%s\" expand=%d\n",
-                    i,
-                    cmd_list->heredocs[i].delim ? cmd_list->heredocs[i].delim : "(null)",
-                    cmd_list->heredocs[i].expand
-                );
-            }
-        }
-        else
-            printf("  heredocs = (none)\n");
-
-        // Final heredoc used
-        printf("  heredoc used = %s\n", cmd_list->heredoc_delim ? cmd_list->heredoc_delim : "(null)");
+        printf("  heredoc = %s\n", cmd_list->heredoc_delim ? cmd_list->heredoc_delim : "(null)");
         printf("  heredoc expand = %d\n", cmd_list->heredoc_expand);
         printf("  heredoc fd = %d\n", cmd_list->heredoc_fd);
         printf("\n");
@@ -103,7 +85,6 @@ void print_cmd_list(t_cmd *cmd_list)
         cmd_list = cmd_list->next;
     }
 }
-
 
 
 void print_list(t_token *head)

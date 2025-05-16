@@ -6,29 +6,31 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 16:00:37 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/13 15:31:53 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/16 23:49:16 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "execution.h"
 
-
-void handle_redirections(t_cmd *cmd)
+static void	handle_infiles(t_cmd *cmd, t_list *alloc_list)
 {
-	int fd;
-	int i;
+	int		fd;
+	int		tmp_fd;
+	int		i;
 
 	fd = -1;
 	i = 0;
 	while (cmd->infiles && cmd->infiles[i])
 	{
-		int tmp_fd = open(cmd->infiles[i], O_RDONLY);
+		tmp_fd = open(cmd->infiles[i], O_RDONLY);
 		if (tmp_fd < 0)
 		{
 			perror(cmd->infiles[i]);
+			free_all(&alloc_list);
 			exit(EXIT_FAILURE);
 		}
-		if (cmd->infiles[i + 1] == NULL)
+		if (!cmd->infiles[i + 1])
 			fd = tmp_fd;
 		else
 			close(tmp_fd);
@@ -39,24 +41,29 @@ void handle_redirections(t_cmd *cmd)
 		dup2(fd, STDIN_FILENO);
 		close(fd);
 	}
+}
+
+static void	handle_outfiles(t_cmd *cmd, t_list *alloc_list)
+{
+	int	(fd), (tmp_fd), (flags), (i);
 
 	fd = -1;
 	i = 0;
 	while (cmd->outfiles && cmd->outfiles[i])
 	{
-		int flags = O_WRONLY | O_CREAT;
+		flags = O_WRONLY | O_CREAT;
 		if (cmd->append_flags && cmd->append_flags[i] == 1)
 			flags |= O_APPEND;
 		else
 			flags |= O_TRUNC;
-
-		int tmp_fd = open(cmd->outfiles[i], flags, 0644);
+		tmp_fd = open(cmd->outfiles[i], flags, 0644);
 		if (tmp_fd < 0)
 		{
 			perror(cmd->outfiles[i]);
+			free_all(&alloc_list);
 			exit(EXIT_FAILURE);
 		}
-		if (cmd->outfiles[i + 1] == NULL)
+		if (!cmd->outfiles[i + 1])
 			fd = tmp_fd;
 		else
 			close(tmp_fd);
@@ -69,26 +76,43 @@ void handle_redirections(t_cmd *cmd)
 	}
 }
 
-void exec_pipeline_cmd(t_shell *shell, t_cmd *cmd, char **paths, int in_fd,
-						int out_fd, t_list *alloc_list)
+
+void	handle_redirections(t_cmd *cmd, t_list *alloc_list)
 {
-	char *cmd_path;
+	handle_infiles(cmd, alloc_list);
+	handle_outfiles(cmd, alloc_list);
+}
+void exec_pipeline_cmd(t_shell *shell, t_cmd *cmd, char **paths,
+	int in_fd, int out_fd, t_list *alloc_list)
+{
+	char	*cmd_path;
 
 	set_child_signals();
 	dup2(in_fd, STDIN_FILENO);
 	dup2(out_fd, STDOUT_FILENO);
-	handle_redirections(cmd);
+	if (in_fd != STDIN_FILENO)
+	close(in_fd);
+	if (out_fd != STDOUT_FILENO)
+	close(out_fd);
+
+	handle_redirections(cmd, alloc_list);
 
 	if (!cmd->args || !cmd->args[0])
+	{
+		free_all(&alloc_list);
 		exit(EXIT_SUCCESS);
-
+	}
 	if (is_builtin_name(cmd->args[0]))
+	{
+		free_all(&alloc_list);
 		exit(exec_builtin(&shell, alloc_list));
+	}
 
 	cmd_path = check_cmd(paths, cmd->args[0], alloc_list);
 	if (!cmd_path)
 	{
-		fprintf(stderr, "%s: command not found\n", cmd->args[0]);
+		write(2, cmd->args[0], ft_strlen(cmd->args[0]));
+		write(2, ": command not found\n", 21);
 		exit(127);
 	}
 	execve(cmd_path, cmd->args, shell->envp);
@@ -96,43 +120,46 @@ void exec_pipeline_cmd(t_shell *shell, t_cmd *cmd, char **paths, int in_fd,
 	exit(EXIT_FAILURE);
 }
 
+
 void pipex(t_shell **shell, t_list *alloc_list)
 {
-	int		pipe_fd[2];
-	int		in_fd = dup(STDIN_FILENO);
-	int		prev_fd = in_fd;
-	pid_t	pid;
 	char	**paths = get_paths(shell, alloc_list);
-	t_cmd	*current = (*shell)->cmds;
+	t_cmd	*cur = (*shell)->cmds;
+	int		pipe_fd[2];
+	int		prev_fd = dup(STDIN_FILENO);
+	pid_t	pid;
 
-	while (current && current->has_pipe)
+	while (cur && cur->has_pipe)
 	{
 		if (pipe(pipe_fd) == -1)
 		{
 			perror("pipe");
-			exit(EXIT_FAILURE);
+			execute_exit((*shell), alloc_list);
 		}
 		pid = fork();
 		if (pid == 0)
 		{
 			close(pipe_fd[0]);
-			exec_pipeline_cmd(*shell, current, paths, prev_fd, pipe_fd[1], alloc_list);
+			exec_pipeline_cmd(*shell, cur, paths, prev_fd, pipe_fd[1], alloc_list);
 		}
-		close(pipe_fd[1]);
+		close(pipe_fd[1]);    
 		if (prev_fd != STDIN_FILENO)
-			close(prev_fd);
-		prev_fd = pipe_fd[0];
-		current = current->next;
+			close(prev_fd);   
+		prev_fd = pipe_fd[0];   
+		cur = cur->next;
 	}
 
-	if (current)
+	if (cur)
 	{
 		pid = fork();
 		if (pid == 0)
-			exec_pipeline_cmd(*shell, current, paths, prev_fd, STDOUT_FILENO, alloc_list);
+		{
+			exec_pipeline_cmd(*shell, cur, paths, prev_fd, STDOUT_FILENO, alloc_list);
+		}
 		if (prev_fd != STDIN_FILENO)
 			close(prev_fd);
 	}
+
 	while (wait(NULL) > 0)
 		;
 }

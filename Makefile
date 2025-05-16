@@ -1,19 +1,23 @@
 
 NAME = minishell
-CC = cc
+CC = cc #-g -g3 -fsanitize=address
 # CFLAGS = -Wall -Wextra -Werror
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRC = parsing/minishell.c parsing/parcing.c parsing/parce_dollar.c parsing/handel_error.c \
-      parsing/parce_cmd.c parsing/env_copy.c parsing/free_all.c parsing/print_lists.c \
-      parsing/signals.c execution/tools_1.c execution/tools_2.c execution/execution.c \
-      execution/in_out.c execution/pipe.c execution/builtin/built_in.c \
-      execution/builtin/unset.c execution/builtin/expuns_utils1.c \
-      execution/builtin/expuns_utils2.c execution/builtin/echo.c \
-      execution/builtin/tools1.c execution/builtin/export.c execution/builtin/test.c \
-      libft/ft_malloc.c execution/exit_status.c execution/heredoc.c
+SRC = parsing/minishell.c parsing/parcing.c parsing/parce_dollar.c \
+      parsing/handel_error.c parsing/parce_cmd.c parsing/env_copy.c \
+      parsing/print_lists.c parsing/signals.c \
+      execution/tools_1.c execution/tools_2.c execution/execution.c \
+      execution/in_out.c execution/pipe.c execution/exit_status.c \
+      execution/heredoc.c execution/errors.c \
+      execution/builtin/built_in.c execution/builtin/ft_echo.c \
+      execution/builtin/ft_exit.c execution/builtin/ft_export.c \
+      execution/builtin/ft_export_helpers.c execution/builtin/ft_unset.c \
+      execution/builtin/ft_cd.c execution/builtin/ft_env.c \
+      execution/builtin/ft_pwd.c libft/ft_malloc.c libft/ft_strcmp.c
+
 
 OBJ = $(SRC:.c=.o)
 
@@ -24,7 +28,10 @@ LIBFT_SRC = libft/ft_bzero.c libft/ft_calloc.c libft/ft_isalnum.c \
             libft/ft_putstr_fd.c libft/ft_putendl_fd.c libft/ft_isspace.c \
             libft/ft_lstadd_back_bonus.c libft/ft_lstclear_bonus.c \
             libft/ft_lstdelone_bonus.c libft/ft_lstlast_bonus.c \
-            libft/ft_lstnew_bonus.c libft/ft_atoi.c libft/put_error.c
+            libft/ft_lstnew_bonus.c libft/ft_atoi.c libft/ft_errors.c \
+			
+    		
+
 
 LIBFT_FILES = $(LIBFT_SRC) libft/libft.h
 

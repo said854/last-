@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 16:00:53 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/13 10:39:24 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/16 17:50:58 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,6 @@ void	print_arr(char **arr)
 			printf(" ");
 		i++;
 	}
-}
-
-int	count_args(char **args)
-{
-	int	i;
-
-	i = 0;
-	if (!args || !args[i])
-		return (EXIT_SUCCESS);
-	while (args[i])
-		i++;
-	return (i);
 }
 
 void	mini_display(void)

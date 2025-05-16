@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools1.c                                           :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/29 17:01:24 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/05 14:22:38 by hakader          ###   ########.fr       */
+/*   Created: 2025/05/16 17:07:15 by hakader           #+#    #+#             */
+/*   Updated: 2025/05/16 17:07:27 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../execution.h"
-#include <string.h>
+#include "libft.h"
 
-void	update_env(t_env **env, char *key, char *replace, t_list *alloc_list)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	t_env	*tmp;
+	unsigned char	*str1;
+	unsigned char	*str2;
+	size_t			i;
 
-	if (!key || !replace)
-		return ;
-	tmp = *env;
-	while (tmp)
+	i = 0;
+	str1 = ((unsigned char *)s1);
+	str2 = ((unsigned char *)s2);
+	while ((str1[i] || str2[i]) && i < n)
 	{
-		if (ft_strcmp(tmp->key, key) == 0)
-		{
-			tmp->value = ft_strdup(replace, alloc_list);
-			free (replace);
-			return ;
-		}
-		tmp = tmp->next;
+		if (str1[i] != str2[i])
+			return (str1[i] - str2[i]);
+		i++;
 	}
+	return (0);
 }

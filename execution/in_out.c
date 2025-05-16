@@ -6,46 +6,61 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:06:12 by hakader           #+#    #+#             */
-/*   Updated: 2025/04/26 17:58:40 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/16 18:16:22 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-void	infile(const char *filename)
+int	open_all_infiles(char **infiles)
 {
-	int	fd_in;
-
-	fd_in = open(filename, O_RDONLY);
-	if (fd_in < 0)
+	int (fd), (i), (error);
+	fd = -1;
+	i = 0;
+	error = 0;
+	while (infiles && infiles[i])
 	{
-		perror("Error opening input file");
-		exit(EXIT_FAILURE);
+		fd = open(infiles[i], O_RDONLY);
+		if (fd < 0)
+		{
+			perror(infiles[i]);
+			error = 1;
+		}
+		else
+		{
+			dup2(fd, STDIN_FILENO);
+			close(fd);
+		}
+		i++;
 	}
-	if (dup2(fd_in, STDIN_FILENO) < 0)
-	{
-		perror("Error redirecting stdin");
-		close(fd_in);
-		exit(EXIT_FAILURE);
-	}
-	close(fd_in);
+	return (error);
 }
 
-void	outfile(const char *filename)
+int	open_all_outfiles(char **outfiles, int *append_flags)
 {
-	int	fd_out;
-
-	fd_out = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd_out < 0)
+	int (fd), (i), (flags), (error);
+	error = 0;
+	i = 0;
+	fd = -1;
+	while (outfiles && outfiles[i])
 	{
-		perror("Error opening output file");
-		exit(EXIT_FAILURE);
+		flags = O_WRONLY | O_CREAT;
+		if (append_flags[i])
+			flags |= O_APPEND;
+		else
+			flags |= O_TRUNC;
+		fd = open(outfiles[i], flags, 0644);
+		if (fd < 0)
+		{
+			perror(outfiles[i]);
+			error = 1;
+		}
+		else
+		{
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+		}
+		i++;
 	}
-	if (dup2(fd_out, STDOUT_FILENO) < 0)
-	{
-		perror("Error redirecting stdout");
-		close(fd_out);
-		exit(EXIT_FAILURE);
-	}
-	close(fd_out);
+	return (error);
 }

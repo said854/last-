@@ -1,47 +1,71 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 18:08:28 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/13 10:28:37 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/16 17:36:15 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../execution.h"
 
-
-int open_and_write(t_cmd *cmd, int flag, int i)
+int	is_new_line(char *arg)
 {
-	int fd = -1;
-	int j = 0;
+	int	j;
 
+	j = 1;
+	if (arg[0] != '-' || arg[1] != 'n')
+		return (EXIT_SUCCESS);
+	while (arg[j])
+	{
+		if (arg[j] != 'n')
+			return (0);
+		j++;
+	}
+	return (EXIT_FAILURE);
+}
+
+int	handle_outfiles(t_cmd *cmd, int *fd)
+{
+	int	j;
+	int	flags;
+	int	temp_fd;
+
+	j = 0;
 	while (cmd->outfiles && cmd->outfiles[j])
 	{
-		int flags = O_WRONLY | O_CREAT;
+		flags = O_WRONLY | O_CREAT;
 		if (cmd->append_flags[j] == 1)
 			flags |= O_APPEND;
 		else
 			flags |= O_TRUNC;
-
-		int temp_fd = open(cmd->outfiles[j], flags, 0644);
+		temp_fd = open(cmd->outfiles[j], flags, 0644);
 		if (temp_fd == -1)
 		{
 			perror(cmd->outfiles[j]);
 			return (1);
 		}
 		if (cmd->outfiles[j + 1] == NULL)
-			fd = temp_fd;
+			*fd = temp_fd;
 		else
 			close(temp_fd);
 		j++;
 	}
+	return (0);
+}
 
+int	open_and_write(t_cmd *cmd, int flag, int i)
+{
+	int	fd;
+
+	fd = -1;
+	if (handle_outfiles(cmd, &fd))
+		return (1);
 	if (fd == -1)
 		return (EXIT_FAILURE);
-
 	while (cmd->args[i])
 	{
 		write(fd, cmd->args[i], ft_strlen(cmd->args[i]));
@@ -54,6 +78,7 @@ int open_and_write(t_cmd *cmd, int flag, int i)
 	close(fd);
 	return (EXIT_SUCCESS);
 }
+
 int	execute_echo(t_cmd *cmd)
 {
 	int (i), (n_flag);
@@ -68,11 +93,6 @@ int	execute_echo(t_cmd *cmd)
 		return (open_and_write(cmd, n_flag, i));
 	while (cmd->args[i])
 	{
-		// if (cmd->args[i] && ft_strcmp(cmd->args[1], "$?") == 0)
-		// {
-		// 	printf("%d\n", exit_status);
-		// 	i++;
-		// }
 		printf("%s", cmd->args[i]);
 		if (cmd->args[i + 1])
 			printf(" ");

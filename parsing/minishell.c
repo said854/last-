@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:23:38 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/16 15:40:14 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/16 23:51:22 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,23 +49,18 @@ int	main(int ac, char **av, char **envp)
 		else if (!(is_empty(line)))
 			add_history(line);
 		shell->tokens = tokenize_line(shell, line, alloc_list);
-		if (shell->tokens && check_syntax(shell->tokens))
+		if (shell->tokens && check_syntax(shell))
 		{
 			shell->cmds = build_cmd_list(shell->tokens, alloc_list);
 			if (shell->cmds)
 			{
-				print_cmd_list(shell->cmds);
+				// print_cmd_list(shell->cmds);
 				execution_part(shell, &alloc_list);
 			}
 		}
-
-		// free_token_list(shell->tokens);
 		shell->tokens = NULL;
-		//free_cmd_list(shell->cmds);
 		shell->cmds = NULL;
 		free(line);
 	}
-
-	// free_shell(shell);
 	return (0);
 }

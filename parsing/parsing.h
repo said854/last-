@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:20:48 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/13 10:49:59 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/16 16:30:27 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 // char	*parce_line(char *line);
 t_token *tokenize_line(t_shell *shell, char *line, t_list *alloc_list);
 char    *expand_token_value(char *value, t_shell *shell, t_list *alloc_list);
-int		check_syntax(t_token *token_list);
+int		check_syntax(t_shell *shell);
 t_cmd	*build_cmd_list(t_token *tokens, t_list *alloc_list);
 t_env	*env_copy(char *content, t_list	*alloc_list);
 int		ft_isspace(int c);
@@ -55,5 +55,8 @@ void	print_list(t_token *head);
 void    set_prompt_signals(t_shell *shell);
 void	set_child_signals(void);
 void    set_heredoc_signals(t_shell *shell);
+void	sigint_heredoc_handler(int sig);
+int	print_error(char *message);
+
 
 #endif

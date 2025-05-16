@@ -1,16 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/25 02:53:42 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/13 10:34:38 by hakader          ###   ########.fr       */
+/*   Created: 2025/05/16 16:59:09 by hakader           #+#    #+#             */
+/*   Updated: 2025/05/16 18:04:09 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../execution.h"
+
+int	cmp_key(void *a, void *b)
+{
+	return (ft_strncmp((const char *)a,
+			(const char *)b, ft_strlen((char *)b) + 1));
+}
 
 void	ft_env_remove_if(t_env **env, void *data_ref,
 			int (*cmp)(void *, void *), void (*del)(void *))
@@ -41,17 +47,10 @@ void	ft_env_remove_if(t_env **env, void *data_ref,
 	}
 }
 
-int	cmp_key(void *a, void *b)
-{
-	return (strncmp((char *)a,
-			(char *)b, ft_strlen((char *)b) + 1));
-}
-
 int	excute_unset(t_shell **shell, t_list *alloc_list)
 {
-	(void)shell;
 	char	**check;
-	int	i;
+	int		i;
 
 	i = 1;
 	if ((*shell)->cmds->args)
@@ -68,7 +67,7 @@ int	excute_unset(t_shell **shell, t_list *alloc_list)
 	while ((*shell)->cmds->args[i])
 	{
 		ft_env_remove_if(&((*shell)->env), (*shell)->cmds->args[i],
-						cmp_key, free);
+			cmp_key, free);
 		i++;
 	}
 	(*shell)->exit_status = 0;

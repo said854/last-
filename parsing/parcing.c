@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 13:36:31 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/15 15:56:13 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/16 22:55:55 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,55 @@ t_token_type get_token_type(char *str)
     return WORD;
 }
 
+t_token *return_syntax(t_shell *shell, int len)
+{
+    if (len == -1)
+    {
+        print_error("unclosed quote");
+        shell->exit_status = 258;
+    }
+    else if (len == -2)
+    {
+        print_error("near `;;'");
+        shell->exit_status = 2;
+    }
+    else if (len == -3)
+    {
+        print_error("near `\\'");
+        shell->exit_status = 258;
+    }
+    else if (len == -4)
+    {
+        print_error("near ``'");
+        shell->exit_status = 258;
+    }
+    return (NULL);
+}
+int check_single(char *str)
+{
+    int i = 0;
+    int single = 0;
+
+    while (str[i] && str[i] != '$')
+    {
+        if(str[i] == '\'')
+            single ++;
+        i++;
+    }
+    if(single % 2 == 0)
+        return 0;
+    return 1;
+    
+}
+
+
 t_token *tokenize_line(t_shell *shell, char *line, t_list *alloc_list)
 {
     int i = 0, len;
     t_token *head = NULL;
     char *token_str;
     t_token_type type;
-
+    int is_quete = 0;
     while (line[i])
     {
         while (ft_isspace(line[i]))
@@ -114,44 +156,18 @@ t_token *tokenize_line(t_shell *shell, char *line, t_list *alloc_list)
 
         len = get_token_length(line, i);
         if (len < 0)
-        {
-            if (len == -1)
-                printf("syntax error: unclosed quote\n");
-            else if (len == -2)
-                printf("syntax error near `;;'\n");
-            else if (len == -3)
-                printf("syntax error near `\\'\n");
-            else if (len == -4)
-                printf("syntax error near ``'\n");
-            return NULL;
-        }
-
+            return (return_syntax(shell, len));
         token_str = strndup(line + i, len);
         type = get_token_type(token_str);
-
-        t_token *current_token;
-
-        t_token *last_token = head;
-        while (last_token && last_token->next)
-            last_token = last_token->next;
-
-        int prev_is_heredoc = (last_token && last_token->type == HEREDOC);
-
-        if (type == WORD && ft_strchr(token_str, '$') && !prev_is_heredoc)
+        if (type == WORD && ft_strchr(token_str, '$') && (!check_single(token_str)))
         {
             char *expanded = expand_token_value(token_str, shell, alloc_list);
-            current_token = create_token(expanded, type, alloc_list);
+            append_token(&head, create_token(expanded, type, alloc_list));
         }
         else
-        {
-            current_token = create_token(token_str, type, alloc_list);
-        }
-
-        append_token(&head, current_token);
+            append_token(&head, create_token(token_str, type, alloc_list));
         free(token_str);
         i += len;
     }
-    return head;
+    return (head);
 }
-
-

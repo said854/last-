@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parce_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/12 16:54:25 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/15 15:33:05 by sjoukni          ###   ########.fr       */
+/*   Created: 2025/05/16 16:21:24 by hakader           #+#    #+#             */
+/*   Updated: 2025/05/16 16:21:31 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,9 @@ t_cmd *create_cmd(t_list *alloc_list)
 {
 	t_cmd *new_cmd = ft_malloc(sizeof(t_cmd), &alloc_list);
 	if (!new_cmd)
-		return NULL;
-
-	new_cmd->args = NULL;
-	new_cmd->infiles = NULL;
-	new_cmd->outfiles = NULL;
-	new_cmd->append_flags = NULL;
-	new_cmd->has_pipe = 0;
-	new_cmd->next = NULL;
-	new_cmd->heredoc_delim = NULL;
-	new_cmd->heredoc_expand = 0;
-	new_cmd->heredoc_fd = 0;
-	return new_cmd;
+		return (NULL);
+	ft_bzero(new_cmd, sizeof(t_cmd));
+	return (new_cmd);
 }
 
 static int calculate_args(t_cmd *cmd)
@@ -58,7 +49,7 @@ char *remove_quotes(const char *str, t_list *alloc_list)
 			result[j++] = str[i++];
 	}
 	result[j] = '\0';
-	return result;
+	return (result);
 }
 
 int is_cmd_empty(t_cmd *cmd)
@@ -68,12 +59,22 @@ int is_cmd_empty(t_cmd *cmd)
 
 static void add_arg_to_cmd(t_cmd *cmd, char *arg, t_list *alloc_list)
 {
-	char *clean = remove_quotes(arg, alloc_list);
-	int old_len = calculate_args(cmd);
-	char **args = ft_malloc(sizeof(char *) * (old_len + 2), &alloc_list);
 
-	for (int i = 0; i < old_len; i++)
+	char	*clean;
+	char	**args;
+
+	int (old_len), (i);
+	clean = remove_quotes(arg, alloc_list);
+	old_len = calculate_args(cmd);
+	args = ft_malloc(sizeof(char *) * (old_len + 2), &alloc_list);
+	if (!args)
+		return ;
+	i = 0;
+	while (i < old_len)
+	{
 		args[i] = cmd->args[i];
+		i++;
+	}
 	args[old_len] = clean;
 	args[old_len + 1] = NULL;
 	cmd->args = args;
@@ -81,15 +82,14 @@ static void add_arg_to_cmd(t_cmd *cmd, char *arg, t_list *alloc_list)
 
 char **append_str_array(char **arr, char *new_str, t_list *alloc_list)
 {
-	int i = 0;
+	int (i), (j);
+	i = 0;
 	while (arr && arr[i])
 		i++;
-
 	char **new_arr = ft_malloc(sizeof(char *) * (i + 2), &alloc_list);
 	if (!new_arr)
-		return NULL;
-
-	int j = 0;
+		return (NULL);
+	j = 0;
 	while (j < i)
 	{
 		new_arr[j] = arr[j];
@@ -97,25 +97,29 @@ char **append_str_array(char **arr, char *new_str, t_list *alloc_list)
 	}
 	new_arr[i] = new_str;
 	new_arr[i + 1] = NULL;
-	return new_arr;
+	return (new_arr);
 }
 int get_int_array_length(int *arr)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (arr && (arr[i] == 0 || arr[i] == 1))
 		i++;
-	return i;
+	return (i);
 }
 
 
 int *append_int_array(int *arr, int value, t_list *alloc_list)
 {
-	int i = get_int_array_length(arr);
-	int *new_arr = ft_malloc(sizeof(int) * (i + 2), &alloc_list);
+	int	*new_arr;
+	
+	int (i), (j);
+	i = get_int_array_length(arr);
+	new_arr = ft_malloc(sizeof(int) * (i + 2), &alloc_list);
 	if (!new_arr)
 		return NULL;
-
-	int j = 0;
+	j = 0;
 	while (j < i)
 	{
 		new_arr[j] = arr[j];
@@ -123,7 +127,7 @@ int *append_int_array(int *arr, int value, t_list *alloc_list)
 	}
 	new_arr[i] = value;
 	new_arr[i + 1] = -1;
-	return new_arr;
+	return (new_arr);
 }
 
 
@@ -154,16 +158,13 @@ t_heredoc_tmp	*realloc_array_heredocs(t_heredoc_tmp *old, int new_count, t_list 
 int handle_token_redirection_or_arg(t_token **current, t_cmd *cmd, t_list *alloc_list)
 {
 	t_token *token = *current;
-	
+
 	if (token->type == WORD)
 		add_arg_to_cmd(cmd, token->value, alloc_list);
 	else if (token->type == REDIR_IN || token->type == REDIR_OUT || token->type == APPEND || token->type == HEREDOC)
 	{
 		if (!token->next || token->next->type != WORD)
-		{
-			printf("syntax error near unexpected token\n");
-			return 0;
-		}
+			return (print_error("near unexpected token"));
 		char *target = ft_strdup(token->next->value, alloc_list);
 		if (token->type == REDIR_IN)
 			cmd->infiles = append_str_array(cmd->infiles, target, alloc_list);
@@ -191,7 +192,6 @@ int handle_token_redirection_or_arg(t_token **current, t_cmd *cmd, t_list *alloc
 			cmd->heredocs[cmd->heredoc_count].expand = expand;
 			cmd->heredoc_count++;
 		}
-
 		*current = token->next;
 	}
 	return 1;
@@ -215,8 +215,8 @@ t_cmd *build_cmd_list(t_token *tokens, t_list *alloc_list)
 		{
 			if (is_cmd_empty(current_cmd))
 			{
-				printf("minishell: syntax error near unexpected token `;'\n");
-				return NULL;
+				print_error ("near unexpected token `;'");
+				return (NULL);
 			}
 			add_cmd_to_list(&cmd_list, current_cmd);
 			current_cmd = create_cmd(alloc_list);
@@ -230,6 +230,6 @@ t_cmd *build_cmd_list(t_token *tokens, t_list *alloc_list)
 	}
 	if (!is_cmd_empty(current_cmd))
 		add_cmd_to_list(&cmd_list, current_cmd);
-	return cmd_list;
+	return (cmd_list);
 }
 
