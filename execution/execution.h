@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 09:49:02 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/16 23:17:22 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/17 22:34:45 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ void	free_all(t_list **alloc_list);
 
 /* ======================== REDIRECTIONS ======================== */
 
-void	infile(const char *filename);
-void	outfile(const char *filename);
+
 int		read_heredoc(t_cmd *cmd, t_shell *shell, t_list *alloc_list);
 /* ======================== ECHO HELPERS ======================== */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parce_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 16:21:24 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/16 16:21:31 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/17 22:20:11 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,9 +184,9 @@ int handle_token_redirection_or_arg(t_token **current, t_cmd *cmd, t_list *alloc
 
 		else if (token->type == HEREDOC)
 		{
-			// printf("terget is%s\n", target);
 			char *delim = remove_quotes(target, alloc_list);
-			int expand = !is_quote(*token->next->value);
+			int expand = is_quote(token->next->value);
+			printf("expand is %d\n", expand);
 			cmd->heredocs = realloc_array_heredocs(cmd->heredocs, cmd->heredoc_count + 1, alloc_list);
 			cmd->heredocs[cmd->heredoc_count].delim = delim;
 			cmd->heredocs[cmd->heredoc_count].expand = expand;

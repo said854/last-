@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 09:49:04 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/16 23:32:06 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/17 18:46:08 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,11 @@ void	execution_part(t_shell *shell, t_list **alloc_list)
 		if (shell->cmds->heredocs)
 		{
 			if (!read_heredoc(shell->cmds, shell, *alloc_list))
-				return (sigint_heredoc_handler(shell->exit_status));
+			{
+				// printf("here");
+				// return (sigint_heredoc_handler(shell->exit_status));
+				return ;
+			}
 		}
 		if (shell->cmds->has_pipe)
 		{

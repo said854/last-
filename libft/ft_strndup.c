@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/16 17:11:01 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/17 17:13:04 by sjoukni          ###   ########.fr       */
+/*   Created: 2025/05/17 15:36:13 by sjoukni           #+#    #+#             */
+/*   Updated: 2025/05/17 15:38:50 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../execution.h"
+#include "libft.h"
 
-int	execute_exit(t_shell *shell, t_list *alloc_list)
+char *ft_strndup(const char *s, size_t n, t_list *alloc_list)
 {
-	long	status;
+    char *dup;
+    size_t i = 0;
 
-	status = (long)shell->exit_status;
-	status = ft_atoi(shell->cmds->args[1], alloc_list);
-	if (count_args(shell->cmds->args) > 2)
-	{
-		put_error("exit: too many arguments");
-		status = 1;
-	}
-	printf("exit\n");
-	free_all(&alloc_list);
-	// printf("%ld", status);
-	exit (status);
+    dup = ft_malloc(n + 1, &alloc_list);
+    if (!dup)
+        return (NULL);
+    while (i < n && s[i])
+    {
+        dup[i] = s[i];
+        i++;
+    }
+    dup[i] = '\0';
+    return (dup);
 }

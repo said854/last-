@@ -8,7 +8,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 SRC = parsing/minishell.c parsing/parcing.c parsing/parce_dollar.c \
       parsing/handel_error.c parsing/parce_cmd.c parsing/env_copy.c \
-      parsing/print_lists.c parsing/signals.c \
+      parsing/print_lists.c parsing/signals.c                       \
       execution/tools_1.c execution/tools_2.c execution/execution.c \
       execution/in_out.c execution/pipe.c execution/exit_status.c \
       execution/heredoc.c execution/errors.c \

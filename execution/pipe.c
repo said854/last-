@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 16:00:37 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/16 23:49:16 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/17 16:41:15 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,12 @@ void exec_pipeline_cmd(t_shell *shell, t_cmd *cmd, char **paths,
 	{
 		write(2, cmd->args[0], ft_strlen(cmd->args[0]));
 		write(2, ": command not found\n", 21);
+		free_all(&alloc_list);
 		exit(127);
 	}
 	execve(cmd_path, cmd->args, shell->envp);
 	perror("execve");
+	free_all(&alloc_list); 
 	exit(EXIT_FAILURE);
 }
 

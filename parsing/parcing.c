@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 13:36:31 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/16 22:55:55 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/17 15:39:17 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,17 +157,29 @@ t_token *tokenize_line(t_shell *shell, char *line, t_list *alloc_list)
         len = get_token_length(line, i);
         if (len < 0)
             return (return_syntax(shell, len));
-        token_str = strndup(line + i, len);
+        token_str = ft_strndup(line + i, len, alloc_list);
         type = get_token_type(token_str);
-        if (type == WORD && ft_strchr(token_str, '$') && (!check_single(token_str)))
+        t_token *current_token;
+
+        t_token *last_token = head;
+        while (last_token && last_token->next)
+            last_token = last_token->next;
+
+        int prev_is_heredoc = (last_token && last_token->type == HEREDOC);
+
+        if (type == WORD && ft_strchr(token_str, '$') && !prev_is_heredoc && (!check_single(token_str)))
         {
             char *expanded = expand_token_value(token_str, shell, alloc_list);
-            append_token(&head, create_token(expanded, type, alloc_list));
+            current_token = create_token(expanded, type, alloc_list);
         }
         else
-            append_token(&head, create_token(token_str, type, alloc_list));
-        free(token_str);
+        {
+            current_token = create_token(token_str, type, alloc_list);
+        }
+
+        append_token(&head, current_token);
+        // free(token_str);
         i += len;
     }
-    return (head);
+    return head;
 }

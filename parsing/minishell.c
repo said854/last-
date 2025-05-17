@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:23:38 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/16 23:51:22 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/17 17:27:12 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,11 @@ int	main(int ac, char **av, char **envp)
 		set_prompt_signals(shell);
 		line = readline(CYAN "minishell$ " RESET);
 		if (!line)
-			exit (shell->exit_status);
+		{
+			int status = shell->exit_status;
+			free_all(&alloc_list); 
+			exit(status);         
+		}
 		else if (!(is_empty(line)))
 			add_history(line);
 		shell->tokens = tokenize_line(shell, line, alloc_list);
