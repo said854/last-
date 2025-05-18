@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parce_dollar.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 14:30:42 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/16 16:16:26 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/18 16:33:17 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char *extract_var_name(char *str, int pos, t_list *alloc_list)
 		return (NULL);
 	return ft_substr(str, start, len, alloc_list); 
 }
-
+	
 char *get_env_value(t_shell *shell, char *key, t_list *alloc_list)
 {
 	t_env *tmp;
@@ -60,7 +60,7 @@ char *get_env_value(t_shell *shell, char *key, t_list *alloc_list)
 			return (ft_strdup(tmp->value, alloc_list));
 		tmp = tmp->next;
 	}
-	return (ft_strdup("", alloc_list));
+	return (0);
 }
 
 
@@ -112,8 +112,8 @@ char *expand_token_value(char *value, t_shell *shell, t_list *alloc_list)
 		{
 			char *var = extract_var_name(result, pos, alloc_list);
 			if (!var)
-				break;
-
+			break;
+			
 			char *var_value = get_env_value(shell, var, alloc_list);
 			char *expanded = replace_var_in_string(result, pos, ft_strlen(var), var_value, alloc_list);
 			result = expanded;

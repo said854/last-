@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 09:49:04 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/17 18:46:08 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/18 16:35:20 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,12 @@ static void	exec_command(t_shell *shell, char **paths, t_list **alloc_list)
 {
 	pid_t	pid;
 	char	*cmd;
-
+	
+	if (!shell->cmds->args[0] || !*shell->cmds->args[0])
+	{
+		shell->exit_status = 0;
+		return;
+	}
 	if (if_path(shell, alloc_list))
 		return ;
 	if (if_builtin(shell, (*alloc_list)))
