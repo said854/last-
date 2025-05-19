@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 09:49:04 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/19 17:56:12 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/19 18:21:11 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	exec_child(t_shell *shell, char *cmd, t_list **alloc_list)
 				shell->cmds->append_flags);
 	if (error)
 	{
-		printf("here\n");
+		// printf("here\n");
 		// free_all(alloc_list);
 		exit(EXIT_FAILURE);
 	}
@@ -88,12 +88,23 @@ int	if_path(t_shell *shell, t_list **alloc_list)
 	return (0);
 }
 
+void	err_dir(t_shell *shell)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(shell->cmds->args[0], 2);
+	ft_putstr_fd(": Is a directory\n", 2);
+	shell->exit_status = 126;
+}
+
 static void	exec_command(t_shell *shell, char **paths, t_list **alloc_list)
 {
 	pid_t	pid;
 	char	*cmd;
+	struct stat sa;
 	
-
+	
+	if (stat(shell->cmds->args[0], &sa) == 0)
+		return (err_dir(shell));
 	if (if_path(shell, alloc_list))
 		return ;
 	if (if_builtin(shell, (*alloc_list)))
