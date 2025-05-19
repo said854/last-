@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 13:36:31 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/18 16:05:19 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/18 17:29:29 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,8 +140,25 @@ int should_expand_dollar(char *str)
 	}
 	return (0); 
 }
+t_token *split_expanded(char *str, t_list *alloc_list)
+{
+    char **parts = ft_split(str, ' ', alloc_list);
+    if (!parts)
+        return NULL;
 
+    t_token *head = NULL;
+    for (int i = 0; parts[i]; i++)
+    {
+        t_token *new_token = create_token(parts[i], WORD, alloc_list);
+        if (!new_token)
+        {
+            return NULL;
+        }
+        append_token(&head, new_token);
+    }
 
+    return head;
+}
 
 t_token *tokenize_line(t_shell *shell, char *line, t_list *alloc_list)
 {
@@ -173,7 +190,13 @@ t_token *tokenize_line(t_shell *shell, char *line, t_list *alloc_list)
         if (type == WORD && !prev_is_heredoc && should_expand_dollar(token_str))
         {
             char *expanded = expand_token_value(token_str, shell, alloc_list);
-            current_token = create_token(expanded, type, alloc_list);
+            t_token *expanded_tokens = split_expanded(expanded, alloc_list);
+            if (!head)
+                head = expanded_tokens;
+            else
+                append_token(&head, expanded_tokens);
+            i += len;
+            continue;
         }
         else
         {
@@ -181,7 +204,6 @@ t_token *tokenize_line(t_shell *shell, char *line, t_list *alloc_list)
         }
 
         append_token(&head, current_token);
-        // free(token_str);
         i += len;
     }
     return head;

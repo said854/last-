@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 18:08:28 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/16 17:36:15 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/19 17:27:51 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,19 +78,47 @@ int	open_and_write(t_cmd *cmd, int flag, int i)
 	close(fd);
 	return (EXIT_SUCCESS);
 }
+int open_infile(char **infiles)
+{
+	int	fd;
+	int	i;
+	int	error;
+
+	fd = -1;
+	i = 0;
+	error = 0;
+	while (infiles && infiles[i])
+	{
+		fd = open(infiles[i], O_RDONLY);
+		if (fd < 0)
+		{
+			perror(infiles[i]);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
 
 int	execute_echo(t_cmd *cmd)
 {
-	int (i), (n_flag);
+	int	i, n_flag;
+
 	i = 1;
 	n_flag = 0;
+
+	if (cmd->infiles && open_infile(cmd->infiles))
+	{
+		return 1;
+	}
 	while (cmd->args[i] && is_new_line(cmd->args[i]))
 	{
 		n_flag = 1;
 		i++;
 	}
-	if (cmd->infiles || cmd->outfiles)
+	if (cmd->outfiles)
 		return (open_and_write(cmd, n_flag, i));
+
 	while (cmd->args[i])
 	{
 		printf("%s", cmd->args[i]);
@@ -100,5 +128,8 @@ int	execute_echo(t_cmd *cmd)
 	}
 	if (!n_flag)
 		printf("\n");
+
 	return (EXIT_SUCCESS);
 }
+
+

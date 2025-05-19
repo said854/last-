@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 16:00:37 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/18 16:41:14 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/19 12:29:27 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,16 @@ void pipex(t_shell **shell, t_list *alloc_list)
 		if (prev_fd != STDIN_FILENO)
 			close(prev_fd);
 	}
-	while (wait(NULL) > 0)
-		;
+	int status;
+	while (waitpid(-1, &status, 0) > 0)
+	{
+		if (WIFEXITED(status))
+			(*shell)->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			(*shell)->exit_status = 128 + WTERMSIG(status);
+		else
+			(*shell)->exit_status = 1;
+	}
+
+
 }

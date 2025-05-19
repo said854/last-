@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 16:59:09 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/16 17:28:49 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/19 12:33:14 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,37 @@ void	update_or_add(t_env **env, char *key, char *value, t_list *alloc_list)
 	ft_envadd_back(env, key, value, alloc_list);
 }
 
+char **convert_env_list_to_array(t_env *env, t_list *alloc_list)
+{
+	int		i = 0;
+	t_env	*tmp = env;
+	char	**envp;
+	char	*entry;
+
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+
+	envp = ft_malloc(sizeof(char *) * (i + 1), &alloc_list);
+	if (!envp)
+		return (NULL);
+
+	tmp = env;
+	i = 0;
+	while (tmp)
+	{
+		entry = ft_strjoin(tmp->key, "=", alloc_list);
+		envp[i] = ft_strjoin(entry, tmp->value, alloc_list);
+		i++;
+		tmp = tmp->next;
+	}
+	envp[i] = NULL;
+	return (envp);
+}
+
+
 int	execute_export(t_shell **shell, t_list *alloc_list)
 {
 	int		i;
@@ -85,10 +116,9 @@ int	execute_export(t_shell **shell, t_list *alloc_list)
 		key = get_key((*shell)->cmds->args[i], alloc_list);
 		value = get_value((*shell)->cmds->args[i], alloc_list);
 		update_or_add(&((*shell)->env), key, value, alloc_list);
-		free(key);
-		free(value);
 		i++;
 	}
+	(*shell)->envp = convert_env_list_to_array((*shell)->env, alloc_list);
 	if ((*shell)->exit_status != 1)
 		(*shell)->exit_status = 0;
 	return (EXIT_FAILURE);

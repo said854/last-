@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 16:21:24 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/17 22:20:11 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/19 16:25:36 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,7 @@ int handle_token_redirection_or_arg(t_token **current, t_cmd *cmd, t_list *alloc
 		if (!token->next || token->next->type != WORD)
 			return (print_error("near unexpected token"));
 		char *target = ft_strdup(token->next->value, alloc_list);
+		target = remove_quotes(target, alloc_list);
 		if (token->type == REDIR_IN)
 			cmd->infiles = append_str_array(cmd->infiles, target, alloc_list);
 		else if (token->type == REDIR_OUT || token->type == APPEND)
@@ -186,7 +187,7 @@ int handle_token_redirection_or_arg(t_token **current, t_cmd *cmd, t_list *alloc
 		{
 			char *delim = remove_quotes(target, alloc_list);
 			int expand = is_quote(token->next->value);
-			printf("expand is %d\n", expand);
+			// printf("expand is %d\n", expand);
 			cmd->heredocs = realloc_array_heredocs(cmd->heredocs, cmd->heredoc_count + 1, alloc_list);
 			cmd->heredocs[cmd->heredoc_count].delim = delim;
 			cmd->heredocs[cmd->heredoc_count].expand = expand;

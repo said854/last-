@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   in_out.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:06:12 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/16 18:16:22 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/19 17:58:14 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	open_all_infiles(char **infiles)
 		fd = open(infiles[i], O_RDONLY);
 		if (fd < 0)
 		{
-			perror(infiles[i]);
+			// perror(infiles[i]);
 			error = 1;
 		}
 		else

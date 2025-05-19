@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 09:49:04 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/18 16:35:20 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/19 17:56:12 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,13 @@ static void	exec_child(t_shell *shell, char *cmd, t_list **alloc_list)
 				shell->cmds->append_flags);
 	if (error)
 	{
-		free_all(alloc_list);
+		printf("here\n");
+		// free_all(alloc_list);
 		exit(EXIT_FAILURE);
 	}
 	execve(cmd, &shell->cmds->args[0], shell->envp);
 	perror("execve failed");
-	free_all(alloc_list);
+	// free_all(alloc_list);
 	exit(EXIT_FAILURE);
 }
 
@@ -75,7 +76,7 @@ int	if_path(t_shell *shell, t_list **alloc_list)
 			if (pid == 0)
 			{
 				execve(cmd->args[0], cmd->args, shell->envp);
-				free_all(alloc_list);
+				// free_all(alloc_list);
 				exit(EXIT_FAILURE);
 			}
 			else
@@ -92,11 +93,7 @@ static void	exec_command(t_shell *shell, char **paths, t_list **alloc_list)
 	pid_t	pid;
 	char	*cmd;
 	
-	if (!shell->cmds->args[0] || !*shell->cmds->args[0])
-	{
-		shell->exit_status = 0;
-		return;
-	}
+
 	if (if_path(shell, alloc_list))
 		return ;
 	if (if_builtin(shell, (*alloc_list)))
@@ -108,7 +105,10 @@ static void	exec_command(t_shell *shell, char **paths, t_list **alloc_list)
 		if (pid == 0)
 			exec_child(shell, cmd, alloc_list);
 		else
+		{
+			// printf("herree\n");
 			update_exit_status(shell, pid);
+		}
 	}
 	else
 		set_cmd_not_found(shell, shell->cmds->args[0]);
@@ -118,8 +118,8 @@ void	execution_part(t_shell *shell, t_list **alloc_list)
 {
 	char	**paths;
 
-	if (!shell->cmds)
-		return ;
+	// if (!shell->cmds)
+	// 	return ;
 	paths = get_paths(&shell, (*alloc_list));
 	while (shell->cmds)
 	{

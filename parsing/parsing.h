@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:20:48 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/17 16:34:16 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/19 11:46:24 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	print_list(t_token *head);
 
 // Signal handling
 void    set_prompt_signals(t_shell *shell);
+void	sigint_prompt_handler(int sig);
 void	set_child_signals(void);
 void    set_heredoc_signals(t_shell *shell);
 void	sigint_heredoc_handler(int sig);

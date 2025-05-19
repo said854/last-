@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:23:38 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/18 16:36:01 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/19 17:44:28 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	main(int ac, char **av, char **envp)
 {
 	(void)ac;
 	(void)av;
-
 	char	*line;
 	t_list	*alloc_list = NULL;
 	t_shell	*shell = ft_malloc(sizeof(t_shell), &alloc_list);
@@ -39,7 +38,7 @@ int	main(int ac, char **av, char **envp)
 			append_env(&shell->env, node);
 		i++;
 	}
-	mini_display();
+	// mini_display();
 	while (1)
 	{
 		set_prompt_signals(shell);
@@ -58,6 +57,7 @@ int	main(int ac, char **av, char **envp)
 			shell->cmds = build_cmd_list(shell->tokens, alloc_list);
 			if (shell->cmds)
 			{
+				// printf("here\n");
 				// print_cmd_list(shell->cmds);
 				execution_part(shell, &alloc_list);
 			}

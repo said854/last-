@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 18:16:08 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/17 16:22:30 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/19 17:29:03 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	if_builtin(t_shell *shell, t_list *alloc_list)
 				else if (shell->cmds->outfiles)
 					open_all_outfiles(shell->cmds->outfiles,
 						shell->cmds->append_flags);
-				free_all(&alloc_list);
+				// free_all(&alloc_list);
 				exit(exec_builtin(&shell, alloc_list));
 			}
 			else

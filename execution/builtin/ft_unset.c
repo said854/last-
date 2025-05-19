@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 16:59:09 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/16 18:04:09 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/19 12:38:59 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_env_remove_if(t_env **env, void *data_ref,
 {
 	t_env	*prev;
 	t_env	*curr;
-
+	(void)del; 
 	prev = NULL;
 	curr = *env;
 	while (curr)
@@ -34,12 +34,12 @@ void	ft_env_remove_if(t_env **env, void *data_ref,
 				prev->next = curr->next;
 			else
 				*env = curr->next;
-			if (del)
-			{
-				del(curr->key);
-				del(curr->value);
-			}
-			free(curr);
+			// if (del)
+			// {
+			// 	del(curr->key);
+			// 	del(curr->value);
+			// }
+			// free(curr);
 			return ;
 		}
 		prev = curr;
