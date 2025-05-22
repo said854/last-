@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 09:49:04 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/19 18:21:11 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/20 20:49:45 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,15 @@ int	path_cmd(t_shell **shell)
 static void	exec_child(t_shell *shell, char *cmd, t_list **alloc_list)
 {
 	int	error;
-
+	
 	error = 0;
+	//set_child_signals();
+	// signal(SIGINT, SIG_DFL);
+	// signal(SIGQUIT, SIG_DFL);
 	if (shell->cmds->heredoc_delim)
 	{
+		if (shell->cmds->heredoc_fd == -1)
+			exit(shell->exit_status); 
 		dup2(shell->cmds->heredoc_fd, STDIN_FILENO);
 		close(shell->cmds->heredoc_fd);
 	}
@@ -49,13 +54,16 @@ static void	exec_child(t_shell *shell, char *cmd, t_list **alloc_list)
 	if (shell->cmds->outfiles)
 		error |= open_all_outfiles(shell->cmds->outfiles,
 				shell->cmds->append_flags);
+	// printf("%d\n", error);
 	if (error)
 	{
 		// printf("here\n");
 		// free_all(alloc_list);
 		exit(EXIT_FAILURE);
 	}
+	// ft_putstr_fd("here\n", 1);
 	execve(cmd, &shell->cmds->args[0], shell->envp);
+
 	perror("execve failed");
 	// free_all(alloc_list);
 	exit(EXIT_FAILURE);
@@ -103,10 +111,10 @@ static void	exec_command(t_shell *shell, char **paths, t_list **alloc_list)
 	struct stat sa;
 	
 	
-	if (stat(shell->cmds->args[0], &sa) == 0)
+	if (stat(shell->cmds->args[0], &sa) == 0 && S_ISDIR(sa.st_mode) && strchr(shell->cmds->args[0], '/'))
 		return (err_dir(shell));
-	if (if_path(shell, alloc_list))
-		return ;
+	// if (if_path(shell, alloc_list))
+	// 	return ;
 	if (if_builtin(shell, (*alloc_list)))
 		return ;
 	cmd = check_cmd(paths, shell->cmds->args[0], (*alloc_list));
@@ -129,8 +137,8 @@ void	execution_part(t_shell *shell, t_list **alloc_list)
 {
 	char	**paths;
 
-	// if (!shell->cmds)
-	// 	return ;
+	if (!shell->cmds || !shell->cmds->args || !shell->cmds->args[0]) //for leaks
+		return ;
 	paths = get_paths(&shell, (*alloc_list));
 	while (shell->cmds)
 	{
@@ -138,8 +146,6 @@ void	execution_part(t_shell *shell, t_list **alloc_list)
 		{
 			if (!read_heredoc(shell->cmds, shell, *alloc_list))
 			{
-				// printf("here");
-				// return (sigint_heredoc_handler(shell->exit_status));
 				return ;
 			}
 		}

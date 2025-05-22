@@ -1,0 +1,8 @@
+heardoc 
+pipe with echo 
+echo <"./test_files/infile_big" | echo <"./test_files/infile" 
+signal in more than one minishell with cmd in child prosses 
+prb in leaks in this cmd (jfbwe | jhefb)
+remove for
+norminette
+syntacs error || exit status 

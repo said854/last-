@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 18:08:28 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/19 18:02:26 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/20 15:30:20 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	handle_outfiles(t_cmd *cmd, int *fd)
 	int	temp_fd;
 
 	j = 0;
+
 	while (cmd->outfiles && cmd->outfiles[j])
 	{
 		flags = O_WRONLY | O_CREAT;
@@ -45,8 +46,9 @@ int	handle_outfiles(t_cmd *cmd, int *fd)
 		temp_fd = open(cmd->outfiles[j], flags, 0644);
 		if (temp_fd == -1)
 		{
+			printf("hh\n");
 			perror(cmd->outfiles[j]);
-			return (1);
+			return (0);
 		}
 		if (cmd->outfiles[j + 1] == NULL)
 			*fd = temp_fd;
@@ -55,6 +57,13 @@ int	handle_outfiles(t_cmd *cmd, int *fd)
 		j++;
 	}
 	return (0);
+}
+
+int	err_write(void)
+{
+	ft_putstr_fd("minishell: echo: write error: ", 2);
+	ft_putstr_fd("No space left on device\n", 2);
+	return (EXIT_FAILURE);
 }
 
 int	open_and_write(t_cmd *cmd, int flag, int i)
@@ -68,7 +77,8 @@ int	open_and_write(t_cmd *cmd, int flag, int i)
 		return (EXIT_FAILURE);
 	while (cmd->args[i])
 	{
-		write(fd, cmd->args[i], ft_strlen(cmd->args[i]));
+		if((write(fd, cmd->args[i], ft_strlen(cmd->args[i]))) == -1)
+			return (err_write());
 		if (cmd->args[i + 1])
 			write(fd, " ", 1);
 		i++;

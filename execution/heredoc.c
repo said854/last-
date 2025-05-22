@@ -6,12 +6,9 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:01:14 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/19 22:17:31 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/20 20:47:07 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "execution.h"
-
 
 #include "execution.h"
 
@@ -21,8 +18,9 @@ int	read_heredoc(t_cmd *cmd, t_shell *shell, t_list *alloc_list)
 	pid_t	pid;
 	int		status;
 	char	*line;
+	int		i = 0;
 
-	for (int i = 0; i < cmd->heredoc_count; ++i)
+	while (i < cmd->heredoc_count)
 	{
 		if (pipe(pipe_fd) == -1)
 			return (perror("pipe"), 0);
@@ -33,7 +31,7 @@ int	read_heredoc(t_cmd *cmd, t_shell *shell, t_list *alloc_list)
 
 		if (pid == 0)
 		{
-			signal(SIGINT, SIG_DFL);
+			signal(SIGINT, SIG_DFL); // allow Ctrl+C to work in child
 			signal(SIGQUIT, SIG_IGN);
 			close(pipe_fd[0]);
 
@@ -53,19 +51,18 @@ int	read_heredoc(t_cmd *cmd, t_shell *shell, t_list *alloc_list)
 				free(line);
 			}
 			close(pipe_fd[1]);
-			exit(0);
+			exit(0); 
 		}
 
-		signal(SIGINT, SIG_IGN);
 		waitpid(pid, &status, 0);
-		signal(SIGINT, SIG_DFL);
 		close(pipe_fd[1]);
 
 		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		{
-			shell->exit_status = 130;
+			write(1, "\n", 1);              
 			close(pipe_fd[0]);
-			return (0);
+			shell->exit_status = 130;
+			return (0);                     
 		}
 
 		if (i == cmd->heredoc_count - 1)
@@ -76,6 +73,8 @@ int	read_heredoc(t_cmd *cmd, t_shell *shell, t_list *alloc_list)
 		}
 		else
 			close(pipe_fd[0]);
+
+		i++;
 	}
 	return (1);
 }

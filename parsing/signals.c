@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 15:47:09 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/19 12:17:00 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/20 20:58:40 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	sigint_prompt_handler(int sig)
 {
 	(void)sig;
 	write(1, "\n", 1);
-	rl_replace_line("", 0);
 	rl_on_new_line();
+	rl_replace_line("", 0);
 	rl_redisplay();
 	if (shell_context)
 		shell_context->exit_status = 130;
@@ -28,9 +28,9 @@ void	sigint_prompt_handler(int sig)
 void	sigint_heredoc_handler(int sig)
 {
 	(void)sig;
-	write(1, "\n", 1);
-	if (shell_context)
-		shell_context->exit_status = 130;
+	// write(1, "\n", 1);
+	// if (shell_context)
+	// 	shell_context->exit_status = 130;
 }
 
 void	set_prompt_signals(t_shell *shell)

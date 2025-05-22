@@ -148,10 +148,15 @@ void add_cmd_to_list(t_cmd **head, t_cmd *new_cmd)
 t_heredoc_tmp	*realloc_array_heredocs(t_heredoc_tmp *old, int new_count, t_list *alloc_list)
 {
 	t_heredoc_tmp *new_array = ft_malloc(sizeof(t_heredoc_tmp) * new_count, &alloc_list);
+	int i = 0;
+
 	if (!old)
 		return new_array;
-	for (int i = 0; i < new_count - 1; ++i)
+	while (i < new_count - 1)
+	{
 		new_array[i] = old[i];
+		i++;
+	}
 	return new_array;
 }
 
@@ -187,7 +192,6 @@ int handle_token_redirection_or_arg(t_token **current, t_cmd *cmd, t_list *alloc
 		{
 			char *delim = remove_quotes(target, alloc_list);
 			int expand = is_quote(token->next->value);
-			// printf("expand is %d\n", expand);
 			cmd->heredocs = realloc_array_heredocs(cmd->heredocs, cmd->heredoc_count + 1, alloc_list);
 			cmd->heredocs[cmd->heredoc_count].delim = delim;
 			cmd->heredocs[cmd->heredoc_count].expand = expand;

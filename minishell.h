@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:56:19 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/19 18:04:34 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/20 20:54:31 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@
 # define EXIT_FAILURE 1
 # define EXIT_CMD_NOT_FOUND 127
 # define EXIT_INVALID_ARGS 2
+extern int g_interrupted;
 
 
-extern volatile __sig_atomic_t g_signal_interrupted;
+// extern volatile __sig_atomic_t g_signal_interrupted;
 
 typedef struct s_env
 {
@@ -95,7 +96,7 @@ typedef struct s_shell
 # include "execution/execution.h"
 # include <signal.h>
 # include <sys/stat.h>
-
+# include <errno.h>
 # define RESET		"\x1b[0m"
 # define BLACK		"\x1b[30m"
 # define RED		"\x1b[31m"

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 09:49:02 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/17 22:34:45 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/19 21:19:32 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int		execute_cd(t_cmd *cmd, t_env **env, t_list *alloc_list);
 int		execute_pwd(t_cmd *cmd);
 int		execute_echo(t_cmd *cmd);
 int		execute_env(t_cmd *cmd, t_env *envp);
-int		execute_exit(t_shell *shell, t_list *alloc_list);
+void	execute_exit(t_shell *shell, t_list *alloc_list);
 int		execute_export(t_shell **shell, t_list *alloc_list);
 int		excute_unset(t_shell **shell, t_list *alloc);
 int		exec_builtin(t_shell **shell, t_list *alloc_list);

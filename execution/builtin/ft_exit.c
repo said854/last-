@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 17:11:01 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/17 17:13:04 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/19 21:20:18 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../execution.h"
 
-int	execute_exit(t_shell *shell, t_list *alloc_list)
+void	execute_exit(t_shell *shell, t_list *alloc_list)
 {
 	long	status;
 
@@ -20,11 +20,12 @@ int	execute_exit(t_shell *shell, t_list *alloc_list)
 	status = ft_atoi(shell->cmds->args[1], alloc_list);
 	if (count_args(shell->cmds->args) > 2)
 	{
-		put_error("exit: too many arguments");
-		status = 1;
+		ft_putstr_fd("exit\n", 2);
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		shell->exit_status = 1;
+		return ;
 	}
 	printf("exit\n");
 	free_all(&alloc_list);
-	// printf("%ld", status);
 	exit (status);
 }

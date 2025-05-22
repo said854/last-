@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:57:06 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/17 22:20:43 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/19 21:12:55 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ size_t				ft_strlen(const char *s);
 int					ft_isspace(int c);
 int					is_quote(char *str);
 int					is_operator(char c);
-void				put_error(char *msg);
+void				ft_putstr_fdput_error(char *msg);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 char 				*ft_strndup(const char *s, size_t n, t_list *alloc_list);
 
@@ -76,8 +76,7 @@ void				ft_lstdelone(t_list *lst, void (*del)(void *));
 t_list				*ft_lstlast(t_list *lst);
 t_list				*ft_lstnew(void *content);
 
-//hola
 void				*ft_malloc(size_t size, t_list **alloc_list);
 void				free_all(t_list **alloc_list);
-
+void				put_error(char *msg);
 #endif
