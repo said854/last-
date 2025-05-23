@@ -6,24 +6,31 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:06:12 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/19 21:27:41 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/23 10:43:25 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-int	open_all_infiles(char **infiles)
+void	oi_err(char *err)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(err, 2);
+	ft_putstr_fd(": No such file or directory\n", 2);
+}
+
+int	open_all_infiles(t_shell *shell)
 {
 	int (fd), (i), (error);
 	fd = -1;
 	i = 0;
 	error = 0;
-	while (infiles && infiles[i])
+	while (shell->cmds->infiles && shell->cmds->infiles[i])
 	{
-		fd = open(infiles[i], O_RDONLY);
+		fd = open(shell->cmds->infiles[i], O_RDONLY);
 		if (fd < 0)
 		{
-			perror(infiles[i]);
+			oi_err(shell->cmds->infiles[i]);
 			error = 1;
 		}
 		else
@@ -36,23 +43,23 @@ int	open_all_infiles(char **infiles)
 	return (error);
 }
 
-int	open_all_outfiles(char **outfiles, int *append_flags)
+int	open_all_outfiles(t_shell *shell)
 {
 	int (fd), (i), (flags), (error);
 	error = 0;
 	i = 0;
 	fd = -1;
-	while (outfiles && outfiles[i])
+	while (shell->cmds->outfiles && shell->cmds->outfiles[i])
 	{
 		flags = O_WRONLY | O_CREAT;
-		if (append_flags[i])
+		if (shell->cmds->append_flags[i])
 			flags |= O_APPEND;
 		else
 			flags |= O_TRUNC;
-		fd = open(outfiles[i], flags, 0644);
+		fd = open(shell->cmds->outfiles[i], flags, 0644);
 		if (fd < 0)
 		{
-			perror(outfiles[i]);
+			oi_err(shell->cmds->outfiles[i]);
 			error = 1;
 		}
 		else

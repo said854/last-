@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:56:19 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/20 20:54:31 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/23 10:51:33 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_cmd
 	char				*heredoc_delim;
 	int					heredoc_expand;
 	int					heredoc_fd;
+	int					input_error;
 	struct s_cmd		*next;
 }	t_cmd;
 
@@ -76,6 +77,7 @@ typedef struct s_shell
 	t_cmd	*cmds;
 	char	**envp;
 	int		exit_status;
+	int		from_here_doc;
 }	t_shell;
 
 // t_shell	shell;

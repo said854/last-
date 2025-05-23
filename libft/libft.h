@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 17:57:06 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/19 21:12:55 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/22 21:44:45 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,5 @@ t_list				*ft_lstnew(void *content);
 void				*ft_malloc(size_t size, t_list **alloc_list);
 void				free_all(t_list **alloc_list);
 void				put_error(char *msg);
+void				exit_error(const char *str, t_list *alloc_list);
 #endif

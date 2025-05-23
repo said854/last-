@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 16:59:09 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/19 12:33:14 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:44:29 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ char **convert_env_list_to_array(t_env *env, t_list *alloc_list)
 		i++;
 		tmp = tmp->next;
 	}
-
 	envp = ft_malloc(sizeof(char *) * (i + 1), &alloc_list);
 	if (!envp)
 		return (NULL);

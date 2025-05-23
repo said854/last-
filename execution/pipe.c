@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 16:00:37 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/20 15:32:20 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:42:36 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,17 +87,21 @@ void exec_pipeline_cmd(t_shell *shell, t_cmd *cmd, char **paths, int in_fd,
 						int out_fd, t_list *alloc_list)
 {
 	char *cmd_path;
-
-	set_child_signals();
+	// set_child_signals();
 	dup2(in_fd, STDIN_FILENO);
 	dup2(out_fd, STDOUT_FILENO);
 	handle_redirections(cmd, alloc_list);
 
 	if (!cmd->args || !cmd->args[0])
+	{
+		// ft_putstr_fd("here\n", 2);
 		exit(EXIT_SUCCESS);
+	}
 
 	if (is_builtin_name(cmd->args[0]))
-		exit(exec_builtin(&shell, alloc_list));
+	{
+		exit(exec_builtin(&shell, cmd, alloc_list));
+	}
 
 	cmd_path = check_cmd(paths, cmd->args[0], alloc_list);
 	if (!cmd_path)

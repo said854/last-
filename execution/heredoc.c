@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "execution.h"
-
 int	read_heredoc(t_cmd *cmd, t_shell *shell, t_list *alloc_list)
 {
 	int		pipe_fd[2];
@@ -31,8 +30,7 @@ int	read_heredoc(t_cmd *cmd, t_shell *shell, t_list *alloc_list)
 
 		if (pid == 0)
 		{
-			signal(SIGINT, SIG_DFL); // allow Ctrl+C to work in child
-			signal(SIGQUIT, SIG_IGN);
+			set_heredoc_signals(shell);  // ✅ Setup heredoc-specific signals
 			close(pipe_fd[0]);
 
 			while (1)
@@ -51,29 +49,30 @@ int	read_heredoc(t_cmd *cmd, t_shell *shell, t_list *alloc_list)
 				free(line);
 			}
 			close(pipe_fd[1]);
-			exit(0); 
-		}
-
-		waitpid(pid, &status, 0);
-		close(pipe_fd[1]);
-
-		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		{
-			write(1, "\n", 1);              
-			close(pipe_fd[0]);
-			shell->exit_status = 130;
-			return (0);                     
-		}
-
-		if (i == cmd->heredoc_count - 1)
-		{
-			cmd->heredoc_fd = pipe_fd[0];
-			cmd->heredoc_delim = cmd->heredocs[i].delim;
-			cmd->heredoc_expand = cmd->heredocs[i].expand;
+			exit(0);
 		}
 		else
-			close(pipe_fd[0]);
+		{
+			close(pipe_fd[1]);
+			waitpid(pid, &status, 0);
 
+			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+			{
+				write(1, "\n", 1);
+				close(pipe_fd[0]);
+				shell->exit_status = 130; // ✅ signal interrupt
+				return (0); // stop heredoc processing
+			}
+
+			if (i == cmd->heredoc_count - 1)
+			{
+				cmd->heredoc_fd = pipe_fd[0];
+				cmd->heredoc_delim = cmd->heredocs[i].delim;
+				cmd->heredoc_expand = cmd->heredocs[i].expand;
+			}
+			else
+				close(pipe_fd[0]);
+		}
 		i++;
 	}
 	return (1);

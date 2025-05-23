@@ -25,12 +25,13 @@ void	sigint_prompt_handler(int sig)
 		shell_context->exit_status = 130;
 }
 
+
 void	sigint_heredoc_handler(int sig)
 {
 	(void)sig;
 	// write(1, "\n", 1);
-	// if (shell_context)
-	// 	shell_context->exit_status = 130;
+	if (shell_context)
+		shell_context->exit_status = 130;
 }
 
 void	set_prompt_signals(t_shell *shell)
@@ -46,6 +47,7 @@ void	set_heredoc_signals(t_shell *shell)
 	signal(SIGINT, sigint_heredoc_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
+
 
 void	set_child_signals(void)
 {

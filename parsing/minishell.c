@@ -18,11 +18,7 @@ int	is_empty(char *line)
 {
 	return (line[0] == '\0');
 }
-void	sigint_prompt_handlera(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-}
+
 
 int	main(int ac, char **av, char **envp)
 {
@@ -48,9 +44,9 @@ int	main(int ac, char **av, char **envp)
 	// mini_display();
 	while (1)
 	{
-		signal(SIGINT, sigint_prompt_handler);
+		// signal(SIGINT, );
+		set_prompt_signals(shell);
 		line = readline(CYAN "minishell$ " RESET);
-		signal(SIGINT, sigint_prompt_handlera);
 		if (!line)
 		{
 			int status = shell->exit_status;
@@ -75,5 +71,6 @@ int	main(int ac, char **av, char **envp)
 		free(line);
 
 	}
+
 	return (0);
 }

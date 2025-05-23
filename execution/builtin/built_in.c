@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 18:16:08 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/19 21:19:10 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/23 11:23:43 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,39 +32,37 @@ int	if_builtin(t_shell *shell, t_list *alloc_list)
 			if (pid == 0)
 			{
 				if (shell->cmds->infiles)
-					open_all_infiles(shell->cmds->infiles);
+					open_all_infiles(shell);
 				else if (shell->cmds->outfiles)
-					open_all_outfiles(shell->cmds->outfiles,
-						shell->cmds->append_flags);
-				// free_all(&alloc_list);
-				exit(exec_builtin(&shell, alloc_list));
+					open_all_outfiles(shell);
+				exit(exec_builtin(&shell, (*shell).cmds, alloc_list));
 			}
 			else
 				update_exit_status(shell, pid);
 		}
 		else
-			exec_builtin(&shell, alloc_list);
+			exec_builtin(&shell, (*shell).cmds, alloc_list);
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
 }
 
-int	exec_builtin(t_shell **shell, t_list *alloc_list)
+int	exec_builtin(t_shell **shell, t_cmd *cmd, t_list *alloc_list)
 {
-	if (!ft_strcmp((*shell)->cmds->args[0], "cd"))
-		(*shell)->exit_status = execute_cd((*shell)->cmds,
+	if (!ft_strcmp(cmd->args[0], "cd"))
+		(*shell)->exit_status = execute_cd(cmd,
 				&(*shell)->env, alloc_list);
-	else if (!ft_strcmp((*shell)->cmds->args[0], "echo"))
-		(*shell)->exit_status = execute_echo((*shell)->cmds);
-	else if (!ft_strcmp((*shell)->cmds->args[0], "pwd"))
-		(*shell)->exit_status = execute_pwd((*shell)->cmds);
-	else if (!ft_strcmp((*shell)->cmds->args[0], "export"))
+	else if (!ft_strcmp(cmd->args[0], "echo"))
+		(*shell)->exit_status = execute_echo(cmd);
+	else if (!ft_strcmp(cmd->args[0], "pwd"))
+		(*shell)->exit_status = execute_pwd(cmd);
+	else if (!ft_strcmp(cmd->args[0], "export"))
 		return (execute_export(shell, alloc_list));
-	else if (!ft_strcmp((*shell)->cmds->args[0], "unset"))
+	else if (!ft_strcmp(cmd->args[0], "unset"))
 		return (excute_unset(shell, alloc_list));
-	else if (!ft_strcmp((*shell)->cmds->args[0], "env"))
-		(*shell)->exit_status = execute_env((*shell)->cmds, (*shell)->env);
-	else if (!ft_strcmp((*shell)->cmds->args[0], "exit"))
+	else if (!ft_strcmp(cmd->args[0], "env"))
+		(*shell)->exit_status = execute_env(cmd, (*shell)->env);
+	else if (!ft_strcmp(cmd->args[0], "exit"))
 		execute_exit((*shell), alloc_list);
 	return ((*shell)->exit_status);
 }

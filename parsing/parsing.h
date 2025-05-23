@@ -58,6 +58,7 @@ void	set_child_signals(void);
 void    set_heredoc_signals(t_shell *shell);
 void	sigint_heredoc_handler(int sig);
 int	print_error(char *message);
+void	sigint_handler_child(int sig);
 
 
 #endif

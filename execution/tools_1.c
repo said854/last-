@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 09:58:34 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/19 11:34:52 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/22 22:08:10 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 int	count_args(char **args)
 {
-	int	i = 0;
+	int	i;
 
+	i = 0;
 	if (!args)
 		return (0);
 	while (args[i])
 		i++;
 	return (i);
 }
-
 
 void	update_env(t_env **env, char *key, char *replace, t_list *alloc_list)
 {
@@ -47,7 +47,6 @@ void	update_env(t_env **env, char *key, char *replace, t_list *alloc_list)
 	*env = tmp;
 }
 
-
 char	**get_paths(t_shell **shell, t_list *alloc_list)
 {
 	t_env	*tmp;
@@ -59,9 +58,8 @@ char	**get_paths(t_shell **shell, t_list *alloc_list)
 			return (ft_split(tmp->value, ':', alloc_list));
 		tmp = tmp->next;
 	}
-	return (NULL); 
+	return (NULL);
 }
-
 
 char	*check_cmd(char **paths, char *cmd, t_list *alloc_list)
 {
@@ -70,7 +68,6 @@ char	*check_cmd(char **paths, char *cmd, t_list *alloc_list)
 
 	if (!cmd || cmd[0] == '\0')
 		return (NULL);
-
 	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, X_OK) == 0)
@@ -80,7 +77,6 @@ char	*check_cmd(char **paths, char *cmd, t_list *alloc_list)
 	}
 	if (!paths)
 		return (NULL);
-
 	i = 0;
 	while (paths[i])
 	{
@@ -92,4 +88,3 @@ char	*check_cmd(char **paths, char *cmd, t_list *alloc_list)
 	}
 	return (NULL);
 }
-
