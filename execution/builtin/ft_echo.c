@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 18:08:28 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/23 11:23:34 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/23 16:15:42 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,6 @@ int	handle_outfiles(t_cmd *cmd, int *fd)
 	return (0);
 }
 
-int	err_write(void)
-{
-	ft_putstr_fd("minishell: echo: write error: ", 2);
-	ft_putstr_fd("No space left on device\n", 2);
-	return (EXIT_FAILURE);
-}
-
 int	open_and_write(t_cmd *cmd, int flag, int i)
 {
 	int	fd;
@@ -73,7 +66,7 @@ int	open_and_write(t_cmd *cmd, int flag, int i)
 		return (EXIT_FAILURE);
 	while (cmd->args[i])
 	{
-		if((write(fd, cmd->args[i], ft_strlen(cmd->args[i]))) == -1)
+		if ((write(fd, cmd->args[i], ft_strlen(cmd->args[i]))) == -1)
 			return (err_write());
 		if (cmd->args[i + 1])
 			write(fd, " ", 1);
@@ -85,12 +78,9 @@ int	open_and_write(t_cmd *cmd, int flag, int i)
 	return (EXIT_SUCCESS);
 }
 
-int open_infile(char **infiles)
+int	open_infile(char **infiles)
 {
-	int	fd;
-	int	i;
-	int	error;
-
+	int (fd), (i), (error);
 	fd = -1;
 	i = 0;
 	error = 0;
@@ -110,8 +100,7 @@ int open_infile(char **infiles)
 
 int	execute_echo(t_cmd *cmd)
 {
-	int	i, n_flag;
-
+	int (i), (n_flag);
 	i = 1;
 	n_flag = 0;
 	if (cmd->infiles && open_infile(cmd->infiles))
@@ -123,7 +112,6 @@ int	execute_echo(t_cmd *cmd)
 	}
 	if (cmd->outfiles)
 		return (open_and_write(cmd, n_flag, i));
-
 	while (cmd->args[i])
 	{
 		write (1, cmd->args[i], ft_strlen(cmd->args[i]));
@@ -133,8 +121,5 @@ int	execute_echo(t_cmd *cmd)
 	}
 	if (!n_flag)
 		write (1, "\n", 1);
-
 	return (EXIT_SUCCESS);
 }
-
-

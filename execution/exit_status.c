@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_status.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 18:38:55 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/22 22:06:33 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/26 19:00:43 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,11 @@ void	update_exit_status(t_shell *shell, pid_t pid)
 	int	status;
 
 	signal(SIGINT, SIG_IGN); 
-
 	waitpid(pid, &status, 0);
-
 	if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 	{
-		
 		int sig = WTERMSIG(status);
 		if (sig == SIGINT)
 			write(1, "\n", 1);
@@ -33,7 +30,6 @@ void	update_exit_status(t_shell *shell, pid_t pid)
 			write(2, "Quit (core dumped)\n", 20);
 	}
 }
-
 
 void	set_cmd_not_found(t_shell *shell, char *cmd)
 {

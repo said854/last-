@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_copy.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 18:08:35 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/13 10:40:33 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/26 16:24:48 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 char	*key(char *str, t_list *alloc_list)
 {
 	char	*key;
+	int		i;
+	int		j;
 
-	int (i), (j);
 	i = 0;
 	while (str[i] && str[i] != '=')
 		i++;
@@ -60,7 +61,7 @@ char	*value(char *str, t_list *alloc_list)
 	return (value);
 }
 
-t_env	*env_copy(char *content, t_list	*alloc_list)
+t_env	*env_copy(char *content, t_list *alloc_list)
 {
 	t_env	*new_node;
 

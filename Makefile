@@ -8,15 +8,18 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 SRC = parsing/minishell.c parsing/parcing.c parsing/parce_dollar.c \
       parsing/handel_error.c parsing/parce_cmd.c parsing/env_copy.c \
-      parsing/print_lists.c parsing/signals.c                       \
+      parsing/signals.c parsing/token_utils.c   \
+      parsing/expand.c parsing/get_token_length.c parsing/token_helpers.c \
+      parsing/build_cmd_list.c parsing/array_helpers.c \
       execution/tools_1.c execution/tools_2.c execution/execution.c \
       execution/in_out.c execution/pipe.c execution/exit_status.c \
-      execution/heredoc.c execution/errors.c \
+      execution/heredoc.c execution/errors.c parsing/handle_token_redirection.c \
       execution/builtin/built_in.c execution/builtin/ft_echo.c \
       execution/builtin/ft_exit.c execution/builtin/ft_export.c \
       execution/builtin/ft_export_helpers.c execution/builtin/ft_unset.c \
       execution/builtin/ft_cd.c execution/builtin/ft_env.c \
-      execution/builtin/ft_pwd.c libft/ft_malloc.c libft/ft_strcmp.c
+      execution/builtin/ft_pwd.c libft/ft_malloc.c libft/ft_strcmp.c \
+      execution/test.c execution/builtin/ft_export_helpers2.c
 
 
 OBJ = $(SRC:.c=.o)
@@ -30,7 +33,7 @@ LIBFT_SRC = libft/ft_bzero.c libft/ft_calloc.c libft/ft_isalnum.c \
             libft/ft_lstdelone_bonus.c libft/ft_lstlast_bonus.c \
             libft/ft_lstnew_bonus.c libft/ft_atoi.c libft/ft_errors.c \
 			
-    		
+      
 
 
 LIBFT_FILES = $(LIBFT_SRC) libft/libft.h

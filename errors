@@ -1,0 +1,15 @@
+ ls << ls| <<s \\in pipe with herdoc
+ -------------------------------------------
+ prb expand dollar b=$a  'a=$b' loop infini
+
+ ----------------------------------
+ sh-5.2$ export data="la -la"
+sh-5.2$ echo gfhhs > $data
+
+ls > $sdfsdfa
+
+
+bash: $asdfs: ambiguous redirect // not found
+
+
+ 

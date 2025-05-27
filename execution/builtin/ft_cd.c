@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 18:16:08 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/22 21:31:48 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/25 21:35:34 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,14 @@ void	err_cd(char *err)
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd("cd: ", 2);
 	ft_putstr_fd(err, 2);
-	ft_putstr_fd(": No such file or directory\n", 2);
+	ft_putendl_fd(": No such file or directory", 2);
+}
+
+void	err_cdd(void)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd("cd: ", 2);
+	ft_putendl_fd("please type relative or absolute path", 2);
 }
 
 int	execute_cd(t_cmd *cmd, t_env **env, t_list *alloc_list)
@@ -26,12 +33,15 @@ int	execute_cd(t_cmd *cmd, t_env **env, t_list *alloc_list)
 	char	*new_pwd;
 
 	if (count_args(cmd->args) > 2)
-		return ((put_error("cd: too many arguments")), 1);
-	if (!cmd->args[1])
+		return ((ft_putendl_fd("cd: too many arguments", 2)), 1);
+	if (ft_strcmp(cmd->args[1], "~") == 0)
 	{
-		put_error("please type relative or absolute path");
-		return (EXIT_FAILURE);
+		if (chdir(getenv("HOME")) == -1)
+			return (perror ("home"), EXIT_FAILURE);
+		return (EXIT_SUCCESS);
 	}
+	if (!cmd->args[1])
+		return (err_cdd(), EXIT_FAILURE);
 	old_pwd = getcwd(NULL, 0);
 	if (chdir(cmd->args[1]) == -1)
 	{

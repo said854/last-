@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 09:49:04 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/23 12:36:50 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/26 19:24:18 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ static void	exec_child(t_shell *shell, char *cmd, t_list **alloc_list)
 	int	error;
 
 	error = 0;
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, SIG_DFL);
 	if (shell->cmds->heredoc_delim)
 	{
 		if (shell->cmds->heredoc_fd == -1)
@@ -113,22 +112,38 @@ static void	exec_command(t_shell *shell, char **paths, t_list **alloc_list)
 		set_cmd_not_found(shell, shell->cmds->args[0]);
 }
 
+void	open_out(t_shell *shell)
+{
+	int	fd;
+
+	if (shell->cmds->outfiles && shell->cmds->outfiles[0])
+	{
+		fd = open(shell->cmds->outfiles[0], O_CREAT, 0664);
+		if (fd < 0)
+		{
+			perror("failed to open file");
+			shell->exit_status = 1;
+			return ;
+		}
+		close(fd);
+	}
+	shell->exit_status = 0;
+}
+
+
 void	execution_part(t_shell *shell, t_list **alloc_list)
 {
 	char	**paths;
 
 	if (!shell->cmds || !shell->cmds->args || !shell->cmds->args[0])
-		return ;
+		return (open_out(shell));
 	paths = get_paths(&shell, (*alloc_list));
 	while (shell->cmds)
 	{
 		if (shell->cmds->heredocs)
 		{
-			shell->from_here_doc = 1;
 			if (!read_heredoc(shell->cmds, shell, *alloc_list))
-			{
-				return (sigint_heredoc_handler(shell->exit_status));
-			}
+				return ;
 		}
 		if (shell->cmds->has_pipe)
 		{

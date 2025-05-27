@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 14:46:03 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/17 22:35:39 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/26 16:12:33 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,29 @@ int	check_syntax(t_shell *shell)
 	if (prev && prev->type == PIPE)
 		return (return_syntaxx(shell, -3));
 	return (EXIT_FAILURE);
+}
+
+t_token	*return_syntax(t_shell *shell, int len)
+{
+	if (len == -1)
+	{
+		print_error("unclosed quote");
+		shell->exit_status = 258;
+	}
+	else if (len == -2)
+	{
+		print_error("near `;;'");
+		shell->exit_status = 2;
+	}
+	else if (len == -3)
+	{
+		print_error("near `\\'");
+		shell->exit_status = 258;
+	}
+	else if (len == -4)
+	{
+		print_error("near ``'");
+		shell->exit_status = 258;
+	}
+	return (NULL);
 }

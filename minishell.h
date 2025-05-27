@@ -77,7 +77,6 @@ typedef struct s_shell
 	t_cmd	*cmds;
 	char	**envp;
 	int		exit_status;
-	int		from_here_doc;
 }	t_shell;
 
 // t_shell	shell;
