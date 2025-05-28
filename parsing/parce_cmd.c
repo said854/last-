@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 16:21:24 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/27 21:29:56 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/28 12:41:07 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ static int	handle_token_case(t_token **current, t_cmd **cmd_list,
 
 	token = *current;
 	if (token->type == PIPE)
+	{
 		handle_pipe_case(cmd_list, current_cmd, alloc_list);
+	}
 	else if (token->type == SEMICOLON)
 	{
 		if (!handle_semicolon_case(cmd_list, current_cmd))

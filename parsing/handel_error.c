@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 14:46:03 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/26 16:12:33 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/28 12:48:44 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	check_syntax(t_shell *shell)
 	prev = NULL;
 	if (!current)
 		return (0);
-	if (current->type == PIPE)
-		return (return_syntaxx(shell, -1));
+	// if (current->type == PIPE)
+	// 	return (return_syntaxx(shell, -1));
 	while (current)
 	{
 		if (prev && prev->type == PIPE && current->type == PIPE)

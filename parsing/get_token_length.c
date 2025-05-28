@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 15:30:40 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/26 15:48:08 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/28 12:32:54 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int	get_token_length(char *line, int i)
 	squote = 0;
 	dquote = 0;
 	special = skip_spaces_and_check_specials(line, &i);
+	// printf("num is %d\n", special);
 	if (special)
 		return (special);
 	start = i;

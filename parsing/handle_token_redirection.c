@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 16:01:44 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/27 21:36:01 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/28 13:31:09 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,15 @@ int	handle_redirection(t_token **current, t_cmd *cmd, t_list *alloc_list, t_shel
 	target = ft_strdup(token->next->value, alloc_list);
 	target = remove_quotes(target, alloc_list);
 	if (token->type == REDIR_IN)
+	{
 		cmd->infiles = append_str_array(cmd->infiles, target, alloc_list);
+		cmd->rediriction = append_str_array(cmd->rediriction, target, alloc_list);
+	}
 	else if (token->type == REDIR_OUT || token->type == APPEND)
+	{
 		handle_output_redir(cmd, token->type, target, alloc_list);
+		cmd->rediriction = append_str_array(cmd->rediriction, target, alloc_list);
+	}
 	else if (token->type == HEREDOC)
 	{
 		if (!handle_heredoc(cmd, target, token->next->value, alloc_list))

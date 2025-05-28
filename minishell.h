@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:56:19 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/23 10:51:33 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/28 13:30:10 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_cmd
 	char				**infiles;
 	char				**outfiles;
 	int					*append_flags;
+	char                **rediriction;
 	int					has_pipe;
 	t_heredoc_tmp		*heredocs;
 	int					heredoc_count;

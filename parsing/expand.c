@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 15:25:46 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/26 16:43:51 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/28 10:43:59 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,11 @@ t_token	*split_expanded(char *str, t_list *alloc_list)
 	i = 0;
 	while (parts[i])
 	{
+		if (parts[i][0] == '\0') 
+		{
+			i++;
+			continue;
+		}
 		new_token = create_token(parts[i], WORD, alloc_list);
 		if (!new_token)
 			return (NULL);
@@ -56,6 +61,7 @@ t_token	*split_expanded(char *str, t_list *alloc_list)
 	}
 	return (head);
 }
+
 
 void	fill_unquoted(char *result, const char *str, int *in_single,
 		int *in_double)
