@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 15:01:14 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/26 16:07:16 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/29 15:42:34 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,20 @@ int	read_heredoc(t_cmd *cmd, t_shell *shell, t_list *alloc_list)
 	int		status;
 	char	*line;
 	int		i = 0;
+	int		was_empty_expansion = 0;
 
 	while (i < cmd->heredoc_count)
 	{
 		if (pipe(pipe_fd) == -1)
 			return (perror("pipe"), 0);
-		// signal(SIGQUIT, SIG_IGN);
-		
+
 		pid = fork();
 		if (pid == -1)
 			return (perror("fork"), 0);
 
 		if (pid == 0)
 		{
-			signal(SIGINT, SIG_DFL); 
+			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_IGN);
 			close(pipe_fd[0]);
 
@@ -60,6 +60,7 @@ int	read_heredoc(t_cmd *cmd, t_shell *shell, t_list *alloc_list)
 
 		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		{
+			write(1, "\n", 1);              
 			close(pipe_fd[0]);
 			shell->exit_status = 130;
 			return (0);                     

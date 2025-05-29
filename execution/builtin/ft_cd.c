@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 18:16:08 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/25 21:35:34 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/26 16:17:05 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,6 @@ int	execute_cd(t_cmd *cmd, t_env **env, t_list *alloc_list)
 
 	if (count_args(cmd->args) > 2)
 		return ((ft_putendl_fd("cd: too many arguments", 2)), 1);
-	if (ft_strcmp(cmd->args[1], "~") == 0)
-	{
-		if (chdir(getenv("HOME")) == -1)
-			return (perror ("home"), EXIT_FAILURE);
-		return (EXIT_SUCCESS);
-	}
 	if (!cmd->args[1])
 		return (err_cdd(), EXIT_FAILURE);
 	old_pwd = getcwd(NULL, 0);

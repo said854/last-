@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 18:08:28 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/25 18:32:47 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/26 17:51:38 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ void	swap_env(t_env *a, t_env *b)
 
 int	check_exp(t_shell *shell, t_list *alloc_list)
 {
+	if (check_options(shell->cmds, "export"))
+	{
+		shell->exit_status = 1;
+		return (EXIT_FAILURE);
+	}
 	if (!shell->cmds->args[1])
 	{
 		print_list_env(&(shell->env), alloc_list);

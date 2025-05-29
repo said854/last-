@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 14:46:03 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/28 12:48:44 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/29 15:53:23 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	return_syntaxx(t_shell *shell, int len)
 	return (0);
 }
 
+
 int	check_syntax(t_shell *shell)
 {
 	t_token	*current;
@@ -47,8 +48,8 @@ int	check_syntax(t_shell *shell)
 	prev = NULL;
 	if (!current)
 		return (0);
-	// if (current->type == PIPE)
-	// 	return (return_syntaxx(shell, -1));
+	if (current->type == PIPE)
+		return (return_syntaxx(shell, -1));
 	while (current)
 	{
 		if (prev && prev->type == PIPE && current->type == PIPE)
@@ -71,7 +72,7 @@ t_token	*return_syntax(t_shell *shell, int len)
 	if (len == -1)
 	{
 		print_error("unclosed quote");
-		shell->exit_status = 258;
+		shell->exit_status = 2;
 	}
 	else if (len == -2)
 	{
@@ -81,12 +82,14 @@ t_token	*return_syntax(t_shell *shell, int len)
 	else if (len == -3)
 	{
 		print_error("near `\\'");
-		shell->exit_status = 258;
+		shell->exit_status = 2;
 	}
 	else if (len == -4)
 	{
 		print_error("near ``'");
-		shell->exit_status = 258;
+		shell->exit_status = 2;
 	}
+	else if(len == -6)
+		return_syntaxx(shell, -1);
 	return (NULL);
 }

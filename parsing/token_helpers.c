@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/26 15:45:40 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/26 17:11:30 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/29 15:49:01 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ int	check_semicolon(char *line, int i)
 	{
 		if (line[i + 1] == ';')
 			return (-2);
+		else if(line[i + 1] == '|')
+			return (-6);
 		return (1);
 	}
 	return (0);

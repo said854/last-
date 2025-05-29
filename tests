@@ -50,3 +50,5 @@ yes "no" | head -n 10
 grep 1 < filedoesnotexist | echo 1 | grep 1 | head -1 | cat | ls
 export test="arg1	arg2"
 echo "ls" | env -i $MINISHELL_PATH"/"$EXECUTABLE
+> out.txt > nofile.txt 
+

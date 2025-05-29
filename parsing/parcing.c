@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 13:36:31 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/28 12:39:26 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/29 15:41:08 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ static int	handle_expansion_and_continue(
 {
 	char	*expanded;
 	t_token	*expanded_tokens;
-	// printf("%s\n", token_str);
 	expanded = expand_token_value(token_str, shell, alloc_list);
 	if (is_ambiguous_redirect(last_token, expanded))
 	{
@@ -91,7 +90,7 @@ t_token	*tokenize_line(t_shell *shell, char *line, t_list *alloc_list)
 		token_str = ft_strndup(line + i, len, alloc_list);
 		type = get_token_type(token_str);
 		update_last_token_and_heredoc(head, &last_token, &prev_is_heredoc);
-		if (type == WORD && !prev_is_heredoc)
+		if (type == WORD && !prev_is_heredoc && should_expand_dollar(token_str))
 		{
 			char *expanded = expand_token_value(token_str, shell, alloc_list);
 			if (is_ambiguous_redirect(last_token, expanded))
@@ -104,9 +103,9 @@ t_token	*tokenize_line(t_shell *shell, char *line, t_list *alloc_list)
 			if (expanded_tokens)
 			{
 				if (!head)
-				head = expanded_tokens;
+					head = expanded_tokens;
 				else
-				append_token(&head, expanded_tokens);
+					append_token(&head, expanded_tokens);
 			}
 			i += len;
 			continue;

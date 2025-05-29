@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 17:11:01 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/23 10:11:37 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/27 14:11:57 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	execute_exit(t_shell *shell, t_list *alloc_list)
 		ft_putstr_fd("exit\n", 2);
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		shell->exit_status = 1;
+		exit (shell->exit_status);
 	}
 	printf("exit\n");
 	free_all(&alloc_list);

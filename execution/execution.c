@@ -3,43 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 09:49:04 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/28 13:25:09 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/28 20:29:32 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-
-int	path_cmd(t_shell **shell)
-{
-	pid_t	pid;
-
-	if ((*shell)->cmds->args[0][0] == '/')
-	{
-		if (access((*shell)->cmds->args[0], X_OK) == 0)
-		{
-			pid = fork();
-			if (pid == 0)
-			{
-				execve((*shell)->cmds->args[0],
-					&(*shell)->cmds->args[0], (*shell)->envp);
-			}
-			else
-				update_exit_status((*shell), pid);
-		}
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
-}
 
 static void	exec_child(t_shell *shell, char *cmd, t_list **alloc_list)
 {
 	int	error;
 
 	error = 0;
-	signal(SIGQUIT, SIG_DFL);
 	if (shell->cmds->heredoc_delim)
 	{
 		if (shell->cmds->heredoc_fd == -1)
@@ -47,45 +24,11 @@ static void	exec_child(t_shell *shell, char *cmd, t_list **alloc_list)
 		dup2(shell->cmds->heredoc_fd, STDIN_FILENO);
 		close(shell->cmds->heredoc_fd);
 	}
-	else if (shell->cmds->infiles)
-		error |= open_all_infiles(shell);
-	if (error)
-		exit(EXIT_FAILURE);
-	if (shell->cmds->outfiles)
-		error |= open_all_outfiles(shell);
-	if (error)
-	{
-		shell->cmds = shell->cmds->next;
-		exit(EXIT_FAILURE);
-	}
+	else if (shell->cmds->infiles || shell->cmds->outfiles )
+		in_out(shell);
 	execve(cmd, &shell->cmds->args[0], shell->envp);
 	perror("execve failed");
 	exit(EXIT_FAILURE);
-}
-
-int	if_path(t_shell *shell, t_list **alloc_list)
-{
-	pid_t	pid;
-	t_cmd	*cmd;
-
-	cmd = shell->cmds;
-	while (cmd)
-	{
-		if (cmd->args && cmd->args[0] && access(cmd->args[0], X_OK) == 0)
-		{
-			pid = fork();
-			if (pid == 0)
-			{
-				execve(cmd->args[0], cmd->args, shell->envp);
-				exit(EXIT_FAILURE);
-			}
-			else
-				update_exit_status(shell, pid);
-			return (1);
-		}
-		cmd = cmd->next;
-	}
-	return (0);
 }
 
 static void	exec_command(t_shell *shell, char **paths, t_list **alloc_list)
@@ -112,31 +55,19 @@ static void	exec_command(t_shell *shell, char **paths, t_list **alloc_list)
 		set_cmd_not_found(shell, shell->cmds->args[0]);
 }
 
-void	open_out(t_shell *shell)
-{
-	int	fd;
-
-	if (shell->cmds->outfiles && shell->cmds->outfiles[0])
-	{
-		fd = open(shell->cmds->outfiles[0], O_CREAT, 0664);
-		if (fd < 0)
-		{
-			perror("failed to open file");
-			shell->exit_status = 1;
-			return ;
-		}
-		close(fd);
-	}
-	shell->exit_status = 0;
-}
-
-
 void	execution_part(t_shell *shell, t_list **alloc_list)
 {
 	char	**paths;
 
 	if (!shell->cmds || !shell->cmds->args || !shell->cmds->args[0])
-		return (open_out(shell));
+	{
+		if (shell->cmds->infiles)
+			if (!check_all_infiles(shell->cmds->infiles))
+				return ;
+		if (shell->cmds->outfiles)
+			if (!check_all_outfiles(shell->cmds->outfiles, shell->cmds->append_flags))
+				return ;
+	}
 	paths = get_paths(&shell, (*alloc_list));
 	while (shell->cmds)
 	{

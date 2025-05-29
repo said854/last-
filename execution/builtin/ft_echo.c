@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 18:08:28 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/23 16:15:42 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/28 20:00:24 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,26 +100,27 @@ int	open_infile(char **infiles)
 
 int	execute_echo(t_cmd *cmd)
 {
-	int (i), (n_flag);
+	int	i;
+	int	n_flag;
+
 	i = 1;
 	n_flag = 0;
-	if (cmd->infiles && open_infile(cmd->infiles))
-		return (EXIT_FAILURE);
+
 	while (cmd->args[i] && is_new_line(cmd->args[i]))
 	{
 		n_flag = 1;
 		i++;
 	}
-	if (cmd->outfiles)
-		return (open_and_write(cmd, n_flag, i));
+
 	while (cmd->args[i])
 	{
-		write (1, cmd->args[i], ft_strlen(cmd->args[i]));
+		write(STDOUT_FILENO, cmd->args[i], ft_strlen(cmd->args[i]));
 		if (cmd->args[i + 1])
-			write (1, " ", 1);
+			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (!n_flag)
-		write (1, "\n", 1);
+		write(STDOUT_FILENO, "\n", 1);
+
 	return (EXIT_SUCCESS);
 }

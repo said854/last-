@@ -6,7 +6,7 @@
 /*   By: hakader <hakader@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 16:59:09 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/22 22:08:37 by hakader          ###   ########.fr       */
+/*   Updated: 2025/05/26 17:53:39 by hakader          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ int	cmp_key(void *a, void *b)
 }
 
 void	ft_env_remove_if(t_env **env, void *data_ref,
-			int (*cmp)(void *, void *), void (*del)(void *))
+			int (*cmp)(void *, void *))
 {
 	t_env	*prev;
 	t_env	*curr;
-	(void)del;
+
 	prev = NULL;
 	curr = *env;
 	while (curr)
@@ -34,12 +34,6 @@ void	ft_env_remove_if(t_env **env, void *data_ref,
 				prev->next = curr->next;
 			else
 				*env = curr->next;
-			// if (del)
-			// {
-			// 	del(curr->key);
-			// 	del(curr->value);
-			// }
-			// free(curr);
 			return ;
 		}
 		prev = curr;
@@ -53,6 +47,11 @@ int	excute_unset(t_shell **shell, t_list *alloc_list)
 	int		i;
 
 	i = 1;
+	if (check_options((*shell)->cmds, "unset"))
+	{
+		(*shell)->exit_status = EXIT_FAILURE;
+		return (EXIT_FAILURE);
+	}
 	if ((*shell)->cmds->args)
 	{
 		check = ft_split((*shell)->cmds->args[i], '=', alloc_list);
@@ -62,7 +61,7 @@ int	excute_unset(t_shell **shell, t_list *alloc_list)
 	while ((*shell)->cmds->args[i])
 	{
 		ft_env_remove_if(&((*shell)->env), (*shell)->cmds->args[i],
-			cmp_key, free);
+			cmp_key);
 		i++;
 	}
 	(*shell)->exit_status = 0;

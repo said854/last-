@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:23:38 by sjoukni           #+#    #+#             */
-/*   Updated: 2025/05/27 21:31:21 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/29 15:33:28 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,19 @@ static void	handle_exit(char *line, t_shell *shell, t_list **alloc_list)
 static void	process_line(char *line, t_shell *shell, t_list **alloc_list)
 {
 	if (!(line[0] == '\0'))
-		add_history(line);
+	add_history(line);
 	shell->tokens = tokenize_line(shell, line, *alloc_list);
+	// printf("len = %d\n", shell->tokens->len);
 	if (shell->tokens && check_syntax(shell))
 	{
 		shell->cmds = build_cmd_list(shell->tokens, *alloc_list, shell);
 		if (shell->cmds)
+		{
+			// print_cmd_list(shell->cmds);
 			execution_part(shell, alloc_list);
+		}
 	}
+	shell->skip_syntax_error = 0;
 	shell->tokens = NULL;
 	shell->cmds = NULL;
 }

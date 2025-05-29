@@ -6,7 +6,7 @@
 /*   By: sjoukni <sjoukni@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:56:19 by hakader           #+#    #+#             */
-/*   Updated: 2025/05/28 13:30:10 by sjoukni          ###   ########.fr       */
+/*   Updated: 2025/05/29 15:31:08 by sjoukni          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_token
 {
 	char			*value;
 	int				type;
+	// int 			len;
 	struct s_token	*next;
 }	t_token;
 
@@ -68,6 +69,7 @@ typedef struct s_cmd
 	int					heredoc_expand;
 	int					heredoc_fd;
 	int					input_error;
+	int 				len;
 	struct s_cmd		*next;
 }	t_cmd;
 
@@ -76,6 +78,7 @@ typedef struct s_shell
 	t_env	*env;
 	t_token	*tokens;
 	t_cmd	*cmds;
+	int skip_syntax_error;
 	char	**envp;
 	int		exit_status;
 }	t_shell;
@@ -108,7 +111,5 @@ typedef struct s_shell
 # define MAGENTA	"\x1b[35m"
 # define CYAN		"\x1b[36m"
 # define WHITE		"\x1b[37m"
-
-
 
 #endif
